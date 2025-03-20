@@ -9,12 +9,16 @@ export function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    // Set loaded state after component mount
-    setIsLoaded(true)
+    // Set loaded state after component mount with a slight delay
+    const timer = setTimeout(() => {
+      setIsLoaded(true)
+    }, 100)
+    
+    return () => clearTimeout(timer)
   }, [])
 
   return (
-    <section className="relative overflow-hidden py-20 md:py-32">
+    <section className="relative overflow-hidden py-20 md:py-32 hero-section">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-teal-50 dark:from-blue-950/20 dark:to-teal-950/20 -z-10" />
       <div className="absolute inset-0 bg-[url('/placeholder.svg?height=100&width=100')] bg-repeat opacity-5 -z-10" />
 
@@ -27,7 +31,7 @@ export function HeroSection() {
       <div className="container relative">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-20 items-center">
           <div>
-            <div className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`hero-animation ${isLoaded ? 'loaded' : ''}`}>
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl gradient-text mb-6">
                 Revolutionizing Drug Discovery with AI
                 <span className="block text-foreground">Faster, Smarter, Safer.</span>
@@ -48,7 +52,7 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className={`relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl hero-image ${isLoaded ? 'loaded' : ''}`}>
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 to-teal-500/90 mix-blend-multiply" />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative w-4/5 h-4/5">

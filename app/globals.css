@@ -2,6 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hero section specific fixes */
+.hero-section {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.hero-animation {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.hero-animation.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-animation:not(.loaded) {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hero-image.loaded {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero-image:not(.loaded) {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.hero-image {
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
 @layer base {
   :root {
     --background: 210 40% 98%;
