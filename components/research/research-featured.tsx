@@ -5,6 +5,7 @@ import { motion, useInView, useAnimation } from "framer-motion"
 import { ArrowRight, Calendar, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
 export function ResearchFeatured() {
   const controls = useAnimation()
@@ -42,28 +43,30 @@ export function ResearchFeatured() {
           }}
           className="grid grid-cols-1 lg:grid-cols-5 gap-8"
         >
-          <div className="lg:col-span-3 relative overflow-hidden rounded-xl shadow-lg group">
+          <Link href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11920972/#" className="lg:col-span-3 relative overflow-hidden rounded-xl shadow-lg group block">
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
             <img
-              src="/placeholder.svg?height=500&width=800"
-              alt="AI-Driven Breakthrough in Cancer Drug Discovery"
+              src="https://www.brainvire.com/blog/wp-content/uploads/2024/02/ai-in-diagnosis.jpg"
+              alt="Drug repurposing: a promising tool to accelerate the drug discovery process
+"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-              <Badge className="mb-3 bg-primary hover:bg-primary/90">Research Spotlight</Badge>
-              <h3 className="text-2xl font-bold text-white mb-2">AI-Driven Breakthrough in Cancer Drug Discovery</h3>
+              <Badge className="mb-3 bg-primary hover:bg-primary/90">Market Analysis</Badge>
+              <h3 className="text-2xl font-bold text-white mb-2">Drug repurposing: a promising tool to accelerate the drug discovery process
+              </h3>
               <p className="text-white/80 mb-4 line-clamp-2">
-                Our AI platform has identified a novel compound showing promising results in targeting specific cancer
-                cell mutations with minimal side effects.
+              drug repurposing has gained importance in identifying new therapeutic uses for already-available drugs. Typically, repurposing can be achieved serendipitously (unintentional fortunate observations) or through systematic approaches. Numerous strategies to discover new indications for FDA-approved drugs are discussed in this article
+
               </p>
               <div className="flex items-center text-white/70 text-sm mb-4">
                 <div className="flex items-center mr-4">
                   <Calendar className="mr-1 h-4 w-4" />
-                  Mar 15, 2025
+                  June, 2019
                 </div>
                 <div className="flex items-center">
                   <User className="mr-1 h-4 w-4" />
-                  Dr. Sarah Chen
+                  Vineela Parvathaneni 
                 </div>
               </div>
               <Button variant="outline" className="text-white border-white hover:bg-white hover:text-foreground">
@@ -71,50 +74,50 @@ export function ResearchFeatured() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
-          </div>
+          </Link>
 
           <div className="lg:col-span-2 flex flex-col gap-6">
-            <div className="bg-background rounded-xl shadow-md p-6 border border-border/50 h-1/2 flex flex-col">
+            <Link href="https://www.kauffman.org/reports/a-new-market-access-path-for-repurposed-drugs/" className="bg-background rounded-xl shadow-md p-6 border border-border/50 h-1/2 flex flex-col hover:shadow-lg transition-shadow">
               <Badge className="w-fit mb-3 bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400 hover:bg-teal-200 dark:hover:bg-teal-900/40 border-none">
                 Technology
               </Badge>
-              <h3 className="text-xl font-bold mb-2">Machine Learning Models Improve Drug Efficacy Prediction</h3>
+              <h3 className="text-xl font-bold mb-2"> A New Market Access Path for Repurposed Drugs
+              </h3>
               <p className="text-muted-foreground mb-4 line-clamp-2">
-                New advancements in our ML algorithms have increased prediction accuracy by 15%, accelerating the drug
-                development pipeline.
+              Repurposed drugs present the promise of enabling patients’ access to much-needed therapies sooner and at a lower cost.
               </p>
               <div className="flex items-center text-muted-foreground text-sm mt-auto">
                 <div className="flex items-center mr-4">
                   <Calendar className="mr-1 h-4 w-4" />
-                  Mar 10, 2025
+                  Mar 14, 2014
                 </div>
                 <div className="flex items-center">
                   <User className="mr-1 h-4 w-4" />
-                  Dr. James Wilson
-                </div>
-              </div>
-            </div>
+                  Dominique Pahud
 
-            <div className="bg-background rounded-xl shadow-md p-6 border border-border/50 h-1/2 flex flex-col">
+                </div>
+              </div>
+            </Link>
+
+            <Link href="https://link.springer.com/article/10.1007/s11030-021-10217-3" className="bg-background rounded-xl shadow-md p-6 border border-border/50 h-1/2 flex flex-col hover:shadow-lg transition-shadow">
               <Badge className="w-fit mb-3 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/40 border-none">
-                Trends
+                Industry Trends
               </Badge>
-              <h3 className="text-xl font-bold mb-2">The Future of Personalized Medicine Through AI</h3>
+              <h3 className="text-xl font-bold mb-2">Artificial intelligence to deep learning: machine intelligence approach for drug discovery</h3>
               <p className="text-muted-foreground mb-4 line-clamp-2">
-                How artificial intelligence is enabling truly personalized treatment plans based on individual genetic
-                profiles.
+              Drug designing and development is an important area of research for pharmaceutical companies and chemical scientists. However, low efficacy, off-target delivery, time consumption, and high cost impose a hurdle and challenges that impact drug design and discovery
               </p>
               <div className="flex items-center text-muted-foreground text-sm mt-auto">
                 <div className="flex items-center mr-4">
                   <Calendar className="mr-1 h-4 w-4" />
-                  Mar 5, 2025
+                  April 12, 2021
                 </div>
                 <div className="flex items-center">
                   <User className="mr-1 h-4 w-4" />
-                  Dr. Emily Rodriguez
+                  Rohan Gupta, Devesh Srivastava
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </motion.div>
       </div>
