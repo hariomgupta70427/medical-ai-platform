@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Search, Menu, X } from "lucide-react"
+import { Search, Menu, X, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { cn } from "@/lib/utils"
@@ -30,6 +30,7 @@ export function Navbar() {
     { href: "/simulation", label: "Simulation" },
     { href: "/research", label: "Research" },
     { href: "/contact", label: "Contact" },
+    { href: "/chat", label: "Chat" },
   ]
 
   return (
@@ -75,11 +76,11 @@ export function Navbar() {
             />
           </div>
           <ModeToggle />
-          <Button size="sm" className="hidden sm:flex">
-            Sign In
-          </Button>
-          <Button size="sm" className="gradient-bg">
-            Get Started
+          <Button size="sm" className="gradient-bg" asChild>
+            <Link href="/chat" className="flex items-center gap-2">
+              <MessageCircle className="h-4 w-4" />
+              <span>Chat Now</span>
+            </Link>
           </Button>
           <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMenu}>
             {isMenuOpen ? <X /> : <Menu />}
