@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+
+
     "@emotion/is-prop-valid": "^1.2.1",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.2",
