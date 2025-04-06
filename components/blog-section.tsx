@@ -6,6 +6,38 @@ import { ArrowRight, Calendar, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
+import Link from "next/link"
+
+const articles = [
+  {
+    title: "Drug repurposing: a promising tool to accelerate the drug discovery process",
+    description: "Drug repurposing has gained importance in identifying new therapeutic uses for already-available drugs. Typically, repurposing can be achieved serendipitously or through systematic approaches.",
+    date: "June, 2019",
+    author: "Vineela Parvathaneni",
+    category: "Research",
+    image: "https://www.brainvire.com/blog/wp-content/uploads/2024/02/ai-in-diagnosis.jpg",
+    link: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11920972/#"
+  },
+  {
+    title: "A New Market Access Path for Repurposed Drugs",
+    description: "Repurposed drugs present the promise of enabling patients' access to much-needed therapies sooner and at a lower cost.",
+    date: "Mar 14, 2014",
+    author: "Dominique Pahud",
+    category: "Technology",
+    image: "https://www.pharmasalmanac.com/hubfs/Imported_Blog_Media/GettyImages-1371539465-1.jpg",
+    link: "https://www.kauffman.org/reports/a-new-market-access-path-for-repurposed-drugs/"
+  },
+  {
+    title: "Artificial intelligence to deep learning: machine intelligence approach for drug discovery",
+    description: "Drug designing and development is an important area of research for pharmaceutical companies and chemical scientists.",
+    date: "April 12, 2021",
+    author: "Rohan Gupta, Devesh Srivastava",
+    category: "Industry Trends",
+    image: "https://www.europeanpharmaceuticalreview.com/wp-content/uploads/AI-drug-discovery-1.jpg",
+    link: "https://link.springer.com/article/10.1007/s11030-021-10217-3"
+  }
+]
 
 export function BlogSection() {
   const controls = useAnimation()
@@ -18,38 +50,8 @@ export function BlogSection() {
     }
   }, [controls, isInView])
 
-  const articles = [
-    {
-      title: "AI-Driven Breakthrough in Cancer Drug Discovery",
-      description:
-        "Our AI platform has identified a novel compound showing promising results in targeting specific cancer cell mutations.",
-      date: "Mar 15, 2025",
-      author: "Dr. Sarah Chen",
-      category: "Research",
-      image: "/placeholder.svg?height=200&width=400",
-    },
-    {
-      title: "Machine Learning Models Improve Drug Efficacy Prediction",
-      description:
-        "New advancements in our ML algorithms have increased prediction accuracy by 15%, accelerating the drug development pipeline.",
-      date: "Mar 10, 2025",
-      author: "Dr. James Wilson",
-      category: "Technology",
-      image: "/placeholder.svg?height=200&width=400",
-    },
-    {
-      title: "The Future of Personalized Medicine Through AI",
-      description:
-        "How artificial intelligence is enabling truly personalized treatment plans based on individual genetic profiles.",
-      date: "Mar 5, 2025",
-      author: "Dr. Emily Rodriguez",
-      category: "Trends",
-      image: "/placeholder.svg?height=200&width=400",
-    },
-  ]
-
   return (
-    <section id="blog" className="py-20">
+    <section id="blog" className="py-20 bg-muted/30">
       <div className="container" ref={ref}>
         <motion.div
           initial="hidden"
@@ -88,32 +90,34 @@ export function BlogSection() {
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
               }}
             >
-              <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={article.image || "/placeholder.svg"}
-                    alt={article.title}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <Badge className="bg-primary hover:bg-primary/90">{article.category}</Badge>
+              <Link href={article.link} target="_blank" rel="noopener noreferrer">
+                <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-primary hover:bg-primary/90">{article.category}</Badge>
+                    </div>
                   </div>
-                </div>
-                <CardHeader className="flex-grow">
-                  <CardTitle className="line-clamp-2">{article.title}</CardTitle>
-                  <CardDescription className="line-clamp-3 mt-2">{article.description}</CardDescription>
-                </CardHeader>
-                <CardFooter className="border-t pt-4 flex justify-between items-center">
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Calendar className="mr-1 h-4 w-4" />
-                    {article.date}
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <User className="mr-1 h-4 w-4" />
-                    {article.author}
-                  </div>
-                </CardFooter>
-              </Card>
+                  <CardHeader className="flex-grow">
+                    <CardTitle className="line-clamp-2">{article.title}</CardTitle>
+                    <CardDescription className="line-clamp-3 mt-2">{article.description}</CardDescription>
+                  </CardHeader>
+                  <CardFooter className="border-t pt-4 flex justify-between items-center">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Calendar className="mr-1 h-4 w-4" />
+                      {article.date}
+                    </div>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <User className="mr-1 h-4 w-4" />
+                      {article.author}
+                    </div>
+                  </CardFooter>
+                </Card>
+              </Link>
             </motion.div>
           ))}
         </motion.div>

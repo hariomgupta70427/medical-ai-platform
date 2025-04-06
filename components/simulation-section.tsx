@@ -2,50 +2,13 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion, useInView, useAnimation } from "framer-motion"
-import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Environment } from "@react-three/drei"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
 
-function MoleculeModel() {
-  return (
-    <>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
-      <mesh>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshStandardMaterial color="#3b82f6" metalness={0.5} roughness={0.2} />
-      </mesh>
-      <mesh position={[2, 0, 0]}>
-        <sphereGeometry args={[0.8, 32, 32]} />
-        <meshStandardMaterial color="#14b8a6" metalness={0.5} roughness={0.2} />
-      </mesh>
-      <mesh position={[-1.5, 1, 0]}>
-        <sphereGeometry args={[0.6, 32, 32]} />
-        <meshStandardMaterial color="#f43f5e" metalness={0.5} roughness={0.2} />
-      </mesh>
-      <mesh position={[-1, -1.5, 0.5]}>
-        <sphereGeometry args={[0.7, 32, 32]} />
-        <meshStandardMaterial color="#8b5cf6" metalness={0.5} roughness={0.2} />
-      </mesh>
-      <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.1, 0.1, 2, 16]} />
-        <meshStandardMaterial color="#94a3b8" />
-      </mesh>
-      <mesh position={[-0.75, 0.5, 0]} rotation={[0, 0, Math.PI / 4]}>
-        <cylinderGeometry args={[0.1, 0.1, 1.5, 16]} />
-        <meshStandardMaterial color="#94a3b8" />
-      </mesh>
-      <mesh position={[-0.5, -0.75, 0.25]} rotation={[Math.PI / 8, 0, -Math.PI / 3]}>
-        <cylinderGeometry args={[0.1, 0.1, 1.5, 16]} />
-        <meshStandardMaterial color="#94a3b8" />
-      </mesh>
-      <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={1} />
-      <Environment preset="studio" />
-    </>
-  )
-}
+// Remove Three.js components for now to fix the error
+// We'll add them back later when the site is working
 
 export function SimulationSection() {
   const controls = useAnimation()
@@ -60,121 +23,113 @@ export function SimulationSection() {
   }, [controls, isInView])
 
   return (
-    <section id="simulation" className="py-20 bg-gradient-to-b from-background to-teal-50/50 dark:to-teal-950/20">
-      <div className="container" ref={ref}>
-        <motion.div
-          initial="hidden"
-          animate={controls}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { duration: 0.6 } },
-          }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">AI-Powered Simulations</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Visualize and interact with molecular structures in real-time, powered by our advanced AI algorithms.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <motion.div
+    <section className="py-16 bg-muted/50">
+      <div className="container">
+        <div className="flex flex-col items-center text-center mb-12">
+          <motion.h2
+            ref={ref}
             initial="hidden"
             animate={controls}
             variants={{
-              hidden: { opacity: 0, x: -50 },
-              visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.2 } },
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
             }}
-            className="h-[400px] rounded-xl overflow-hidden shadow-xl"
+            className="text-3xl font-bold tracking-tight mb-4"
           >
-            <Canvas>
-              <MoleculeModel />
-            </Canvas>
-          </motion.div>
-
-          <motion.div
+            Interactive Molecular Simulations
+          </motion.h2>
+          <motion.p
             initial="hidden"
             animate={controls}
             variants={{
-              hidden: { opacity: 0, x: 50 },
-              visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.4 } },
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.1 } },
             }}
+            className="text-muted-foreground max-w-2xl"
           >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8">
-                <TabsTrigger value="protein">Protein Folding</TabsTrigger>
-                <TabsTrigger value="enzyme">Enzyme Interactions</TabsTrigger>
-                <TabsTrigger value="prediction">AI Predictions</TabsTrigger>
-              </TabsList>
-              <TabsContent value="protein" className="space-y-4">
-                <Card>
-                  <CardContent className="pt-6">
-                    <h3 className="text-xl font-semibold mb-2">Protein Folding Analysis</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Our AI predicts protein folding patterns with over 92% accuracy, enabling faster identification of
-                      potential drug targets.
-                    </p>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="rounded-lg bg-primary/10 p-3">
-                        <div className="font-medium">Folding Accuracy</div>
-                        <div className="text-2xl font-bold text-primary">92.7%</div>
-                      </div>
-                      <div className="rounded-lg bg-primary/10 p-3">
-                        <div className="font-medium">Processing Time</div>
-                        <div className="text-2xl font-bold text-primary">3.2s</div>
-                      </div>
-                    </div>
-                    <Button className="w-full">Explore Protein Analysis</Button>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent value="enzyme" className="space-y-4">
-                <Card>
-                  <CardContent className="pt-6">
-                    <h3 className="text-xl font-semibold mb-2">Enzyme Interaction Simulation</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Visualize how enzymes interact with potential drug compounds, predicting binding affinity and
-                      catalytic effects.
-                    </p>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="rounded-lg bg-primary/10 p-3">
-                        <div className="font-medium">Binding Prediction</div>
-                        <div className="text-2xl font-bold text-primary">89.3%</div>
-                      </div>
-                      <div className="rounded-lg bg-primary/10 p-3">
-                        <div className="font-medium">Simulation Speed</div>
-                        <div className="text-2xl font-bold text-primary">5.7s</div>
-                      </div>
-                    </div>
-                    <Button className="w-full">View Enzyme Simulations</Button>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent value="prediction" className="space-y-4">
-                <Card>
-                  <CardContent className="pt-6">
-                    <h3 className="text-xl font-semibold mb-2">AI-Driven Efficacy Predictions</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Our machine learning models analyze molecular structures to predict therapeutic efficacy and
-                      potential side effects.
-                    </p>
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="rounded-lg bg-primary/10 p-3">
-                        <div className="font-medium">Efficacy Prediction</div>
-                        <div className="text-2xl font-bold text-primary">87.5%</div>
-                      </div>
-                      <div className="rounded-lg bg-primary/10 p-3">
-                        <div className="font-medium">Side Effect Detection</div>
-                        <div className="text-2xl font-bold text-primary">94.1%</div>
-                      </div>
-                    </div>
-                    <Button className="w-full">Explore AI Predictions</Button>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </motion.div>
+            Explore molecular structures and interactions in real-time with our advanced simulation tools.
+          </motion.p>
         </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsTrigger value="protein">Protein Folding</TabsTrigger>
+            <TabsTrigger value="binding">Ligand Binding</TabsTrigger>
+            <TabsTrigger value="pathway">Pathway Analysis</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="protein">
+            <Card>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                    <img 
+                      src="https://cdn.rcsb.org/images/structures/examples/protein-folding.gif" 
+                      alt="Protein Folding Simulation"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <h3 className="text-2xl font-bold mb-4">Protein Folding Analysis</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Our advanced AI algorithms predict protein folding patterns with unprecedented accuracy, 
+                      enabling faster identification of potential drug targets and interactions.
+                    </p>
+                    <Button>Learn More</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="binding">
+            <Card>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                    <img 
+                      src="https://cdn.rcsb.org/images/structures/examples/ligand-binding.gif" 
+                      alt="Ligand Binding Simulation"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <h3 className="text-2xl font-bold mb-4">Ligand Binding Simulation</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Visualize and analyze how different molecules interact with target proteins, 
+                      helping identify potential drug candidates more efficiently.
+                    </p>
+                    <Button>Explore Binding</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="pathway">
+            <Card>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                    <img 
+                      src="https://cdn.rcsb.org/images/structures/examples/pathway-analysis.gif" 
+                      alt="Pathway Analysis"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <h3 className="text-2xl font-bold mb-4">Metabolic Pathway Analysis</h3>
+                    <p className="text-muted-foreground mb-6">
+                      Study complex biological pathways and their interactions with potential drug compounds
+                      to better understand therapeutic effects and side effects.
+                    </p>
+                    <Button>View Pathways</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </section>
   )
