@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SendIcon, Bot, User } from "lucide-react"
 import { cn } from "@/lib/utils"
+import ReactMarkdown from 'react-markdown'
 
 interface Message {
   id: string
@@ -18,7 +19,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      content: "Hello! I'm MediAI Assistant. How can I help you with your medical research today?",
+      content: "Hello! I'm MediAI Assistant. How can I help you with your drug discovery or molecular optimization research today?",
       role: "assistant",
       timestamp: new Date(),
     },
@@ -26,8 +27,12 @@ export default function ChatPage() {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const endOfMessagesRef = useRef<HTMLDivElement>(null)
+  const [isClient, setIsClient] = useState(false)
 
-  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   useEffect(() => {
     scrollToBottom()
   }, [messages])
@@ -40,7 +45,6 @@ export default function ChatPage() {
     e.preventDefault()
     if (!input.trim()) return
 
-    // Add user message to chat
     const userMessage: Message = {
       id: Date.now().toString(),
       content: input,
@@ -51,18 +55,90 @@ export default function ChatPage() {
     setInput("")
     setIsLoading(true)
 
-    // Simulate AI response (would be replaced with actual API call)
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          messages: [...messages, userMessage].map(msg => ({
+            role: msg.role,
+            content: msg.content
+          }))
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('API error response:', {
+          status: response.status,
+          statusText: response.statusText,
+          data: errorData
+        });
+        throw new Error(`Failed to get response: ${response.status} - ${errorData}`);
+      }
+
+      const data = await response.json();
+      console.log("Received response:", data);
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
       const aiMessage: Message = {
+        id: data.id || (Date.now() + 1).toString(),
+        content: data.content,
+        role: "assistant",
+        timestamp: new Date(data.timestamp),
+      };
+
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Error fetching response:', error);
+      
+      let errorMessage = "I'm sorry, I encountered an error while processing your request. Please try again later.";
+      if (error instanceof Error) {
+        errorMessage = `I'm sorry, I encountered an error: ${error.message}`;
+      }
+      
+      const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        content: "This is a placeholder response. The actual AI functionality will be implemented later.",
+        content: errorMessage,
         role: "assistant",
         timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, aiMessage])
-      setIsLoading(false)
-    }, 1000)
+      };
+      
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
   }
+
+  const extractSmiles = (content: string): string | null => {
+    const smilesRegex = /`([^`]+)`/g;
+    const matches = [...content.matchAll(smilesRegex)];
+    
+    for (const match of matches) {
+      const potentialSmiles = match[1];
+      if (/^[A-Za-z0-9@+\-=\\\/()\[\]\.#]*$/.test(potentialSmiles) && 
+          /[A-Z]/.test(potentialSmiles) && 
+          /[\(\)=]/.test(potentialSmiles)) {
+        return potentialSmiles;
+      }
+    }
+    
+    return null;
+  };
+
+  const formatTime = (date: Date) => {
+    if (!isClient) return "";
+    
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -71,10 +147,18 @@ export default function ChatPage() {
         <div className="container mx-auto flex flex-1 flex-col max-w-4xl px-4 py-8">
           <div className="flex flex-1 flex-col rounded-lg border shadow-sm bg-card overflow-hidden">
             <div className="p-4 border-b">
-              <h1 className="text-xl font-semibold">MediAI Assistant</h1>
+              <h1 className="text-xl font-semibold">MediAI Drug Discovery Assistant</h1>
               <p className="text-sm text-muted-foreground">
-                Your AI-powered assistant for medical research and drug discovery
+                Your AI-powered assistant for drug discovery, molecular optimization, and medicinal chemistry
               </p>
+              <div className="mt-2 text-xs text-muted-foreground bg-muted p-2 rounded">
+                <p>Try asking:</p>
+                <ul className="list-disc pl-4 mt-1 space-y-1">
+                  <li>"Tell me about Aspirin and its mechanism of action"</li>
+                  <li>"What are the side effects of Paracetamol?"</li>
+                  <li>"How does Ibuprofen work in the body?"</li>
+                </ul>
+              </div>
             </div>
             
             <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -97,13 +181,26 @@ export default function ChatPage() {
                   </div>
                   <div className="flex-1 space-y-2">
                     <div className="prose prose-sm dark:prose-invert">
-                      {message.content}
+                      {message.role === "assistant" ? (
+                        <ReactMarkdown>
+                          {message.content}
+                        </ReactMarkdown>
+                      ) : (
+                        message.content
+                      )}
                     </div>
+                    {message.role === "assistant" && extractSmiles(message.content) && (
+                      <div className="mt-4 border border-border rounded-md p-2 bg-background/50">
+                        <p className="text-xs font-medium mb-1">Molecule Visualization:</p>
+                        <img 
+                          src={`/api/molecule?smiles=${encodeURIComponent(extractSmiles(message.content)!)}`}
+                          alt="Molecule visualization"
+                          className="w-full h-auto max-w-xs mx-auto"
+                        />
+                      </div>
+                    )}
                     <div className="text-xs text-muted-foreground">
-                      {message.timestamp.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {formatTime(message.timestamp)}
                     </div>
                   </div>
                 </div>
@@ -132,7 +229,7 @@ export default function ChatPage() {
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <Input
                   className="flex-1"
-                  placeholder="Type your message..."
+                  placeholder="Ask about drugs, medications, or molecular structures..."
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}

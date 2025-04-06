@@ -1,0 +1,7 @@
+rdkit==2023.9.1
+numpy==1.26.1
+pillow==10.1.0
+matplotlib==3.8.0
+requests==2.31.0
+fastapi==0.104.1
+python-multipart==0.0.6 

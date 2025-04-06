@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Search, Menu, X, MessageCircle } from "lucide-react"
+import { Search, Menu, X, MessageCircle, Wrench } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { cn } from "@/lib/utils"
@@ -29,8 +29,11 @@ export function Navbar() {
     { href: "/", label: "Home" },
     { href: "/simulation", label: "Simulation" },
     { href: "/research", label: "Research" },
+    { href: "/tools", label: "Tools & APIs" },
     { href: "/contact", label: "Contact" },
     { href: "/chat", label: "Chat" },
+    { href: "/demo-explanation", label: "Explainer" },
+    { href: "/drugs", label: "Drug Search" },
   ]
 
   return (
@@ -67,14 +70,6 @@ export function Navbar() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <div className="relative hidden sm:block">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <input
-              type="search"
-              placeholder="Search database..."
-              className="rounded-full bg-background pl-8 pr-4 py-2 text-sm ring-1 ring-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
-            />
-          </div>
           <ModeToggle />
           <Button size="sm" className="gradient-bg" asChild>
             <Link href="/chat" className="flex items-center gap-2">
@@ -109,14 +104,6 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <div className="pt-2 mt-2 border-t flex items-center">
-            <Search className="h-4 w-4 text-muted-foreground mr-2" />
-            <input
-              type="search"
-              placeholder="Search database..."
-              className="flex-1 bg-transparent text-sm focus:outline-none"
-            />
-          </div>
         </nav>
       </div>
     </header>
