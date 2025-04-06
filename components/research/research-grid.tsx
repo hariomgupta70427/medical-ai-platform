@@ -6,6 +6,7 @@ import { ArrowRight, Calendar, User, ChevronLeft, ChevronRight } from "lucide-re
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
 
 export function ResearchGrid() {
   const controls = useAnimation()
@@ -21,65 +22,71 @@ export function ResearchGrid() {
 
   const articles = [
     {
-      title: "Quantum Computing Applications in Drug Discovery",
+      title: "Repurposed Drugs: Current Trends in Drug Discovery",
       description:
-        "Exploring how quantum computing can accelerate computational chemistry and molecular simulations for drug discovery.",
-      date: "Mar 2, 2025",
-      author: "Dr. Robert Chang",
-      category: "Technology",
+        "Drug repurposing explores new uses for existing or rejected drugs to treat different conditions, offering faster development, lower costs, and known safety. It’s a rising trend in drug discovery with huge potential for addressing unmet medical needs.",
+      date: "09 December 2024",
+      author: "Gatadi Srikanth, Durga Prasad Beda and Niggula Praveen Kumar",
+      category: "Market Analysis",
       categoryColor: "blue",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "https://tse3.mm.bing.net/th?id=OIP.faUOXn-h_e0wYBVplrAwXQHaEa&pid=Api&P=0&h=220",
+      link: "https://www.intechopen.com/chapters/1194348"
     },
     {
-      title: "AI-Powered Protein Structure Prediction",
+      title: " How drug repurposing can advance drug discovery: challenges and opportunities",
       description:
-        "How our deep learning models are revolutionizing protein structure prediction with unprecedented accuracy.",
-      date: "Feb 28, 2025",
-      author: "Dr. Lisa Patel",
-      category: "Research",
+        "Traditional drug discovery takes 10–17 years, costs up to $3B, and has low success rates. Drug repurposing is faster (3–12 years), cheaper (~$300M), and less risky.",
+      date: "2024",
+      author: "Luca Pinzi, Nicolò Bisi, Giulio Rastelli",
+      category: "Revise Report",
       categoryColor: "teal",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "https://th.bing.com/th/id/OIP.I9Ey8NBU_CQdJcI6b21iOwHaEK?w=299&h=180&c=7&r=0&o=5&pid=1.7",
+      link: "https://www.frontiersin.org/journals/drug-discovery/articles/10.3389/fddsv.2024.1460100/full"
     },
     {
-      title: "Ethical Considerations in AI-Driven Drug Development",
+      title: "Drug Repurposing of Generic Drugs: Challenges and the Potential Role for Government",
       description:
-        "Examining the ethical implications and responsible practices in using AI for pharmaceutical research.",
-      date: "Feb 25, 2025",
-      author: "Prof. David Martinez",
-      category: "Ethics",
+        "Current drug repurposing research struggles with funding, and even successful trials often lack commercial backing due to low financial incentives.",
+      date: "july,2023",
+      author: "Appl Health Econ Health Policy",
+      category: "revise report",
       categoryColor: "purple",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "https://www.lifearc.org/wp-content/uploads/2021/02/1967_D21_0517_FR.jpg",
+      link: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10627937/"
     },
     {
-      title: "Accelerating Clinical Trials with Predictive Analytics",
+      title: "The drug repurposing market for emerging infectious diseases is projected to hit $47.8 billion by 2034.",
       description:
-        "How machine learning is helping to optimize patient selection and trial design for faster, more effective clinical trials.",
-      date: "Feb 22, 2025",
-      author: "Dr. Jennifer Kim",
-      category: "Clinical",
+        "The global drug repurposing market is rapidly growing. Pharma companies now see big potential in using old drugs for new diseases.",
+      date: "20 November, 2024",
+      author: "Transparency Market Research",
+      category: "Market analysis",
+      categoryColor: "orange",
+      image: "https://cdn.open-pr.com/L/b/Lb20392196_g.jpg",
+      link: "https://www.openpr.com/news/3747239/drug-repurposing-market-opportunities-in-tackling-emerging"
+    },
+    {
+      title: "Application of artificial intelligence and machine learning in drug repurposing",
+      description:
+        "AI and machine learning now power smart, data-driven drug repurposing by analyzing massive biomedical data. New tech like network mining and NLP is unlocking fresh strategies and insights.",
+      date: "31 March, 2024",
+      author: "Sudhir K. Ghandikota ,Anil G Jegga",
+      category: "Research paper",
       categoryColor: "green",
-      image: "/placeholder.svg?height=200&width=400",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO5Hgv8x4tgTeqaWItXnucyCVSdYlDalQkSA&s",
+      link: "https://www.sciencedirect.com/science/article/abs/pii/S1877117324000851?via%3Dihub"
     },
     {
-      title: "The Role of Generative AI in Novel Drug Design",
+      title: "Data-driven drug discovery for drug repurposing",
       description:
-        "Exploring how generative models are creating entirely new molecular structures with desired therapeutic properties.",
-      date: "Feb 18, 2025",
-      author: "Dr. Michael Thompson",
-      category: "Innovation",
-      categoryColor: "amber",
-      image: "/placeholder.svg?height=200&width=400",
-    },
-    {
-      title: "Combining Traditional Medicine with AI Discovery",
-      description:
-        "How we're using AI to analyze traditional medicinal compounds and discover new applications for established remedies.",
-      date: "Feb 15, 2025",
-      author: "Dr. Aisha Rahman",
-      category: "Research",
-      categoryColor: "teal",
-      image: "/placeholder.svg?height=200&width=400",
-    },
+        "Computational drug repurposing is a key data-driven method to find and rank new uses for drugs by analyzing drug, gene, and disease profiles strategically.",
+      date: " 2023",
+      author: "Ryuta Saito et al. Nihon Yakurigaku Zasshi",
+      category: "Revise report",
+      categoryColor: "red",
+      image: "https://th.bing.com/th/id/OIP.2WHTgAq8AM3QYey1sYKFtAHaE8?w=211&h=180&c=7&r=0&o=5&pid=1.7",
+      link: "https://pubmed.ncbi.nlm.nih.gov/36596476/"
+    }
   ]
 
   return (
@@ -129,38 +136,43 @@ export function ResearchGrid() {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
               }}
-              className="card-hover"
+              initial="hidden"
+              animate={controls}
+              transition={{ delay: index * 0.1 }}
             >
-              <Card className="h-full overflow-hidden flex flex-col">
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={article.image || "/placeholder.svg"}
-                    alt={article.title}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <Badge
-                      className={`bg-${article.categoryColor}-100 text-${article.categoryColor}-800 dark:bg-${article.categoryColor}-900/30 dark:text-${article.categoryColor}-400 hover:bg-${article.categoryColor}-200 dark:hover:bg-${article.categoryColor}-900/40 border-none`}
-                    >
-                      {article.category}
-                    </Badge>
-                  </div>
-                </div>
-                <CardHeader className="flex-grow">
-                  <CardTitle className="line-clamp-2">{article.title}</CardTitle>
-                  <CardDescription className="line-clamp-3 mt-2">{article.description}</CardDescription>
-                </CardHeader>
-                <CardFooter className="border-t pt-4 flex justify-between items-center">
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Calendar className="mr-1 h-4 w-4" />
-                    {article.date}
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <User className="mr-1 h-4 w-4" />
-                    {article.author}
-                  </div>
-                </CardFooter>
-              </Card>
+              <a href={article.link} target="_blank" rel="noopener noreferrer">
+                <Card className="h-full hover:shadow-lg transition-shadow duration-200 cursor-pointer">
+                  <CardHeader className="p-0">
+                    <div className="relative aspect-video">
+                      <Image
+                        src={article.image || "/placeholder.svg"}
+                        alt={article.title}
+                        fill
+                        className="object-cover rounded-t-lg"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <Badge
+                        className={`bg-${article.categoryColor}-100 text-${article.categoryColor}-800 dark:bg-${article.categoryColor}-900/30 dark:text-${article.categoryColor}-400 hover:bg-${article.categoryColor}-200 dark:hover:bg-${article.categoryColor}-900/40 border-none`}
+                      >
+                        {article.category}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardTitle className="line-clamp-2 px-4">{article.title}</CardTitle>
+                  <CardDescription className="line-clamp-3 mt-2 px-4">{article.description}</CardDescription>
+                  <CardFooter className="flex justify-between items-center px-4 py-2">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      {article.date}
+                    </div>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <User className="w-4 h-4 mr-2" />
+                      {article.author}
+                    </div>
+                  </CardFooter>
+                </Card>
+              </a>
             </motion.div>
           ))}
         </motion.div>
