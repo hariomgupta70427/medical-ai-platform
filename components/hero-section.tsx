@@ -44,8 +44,7 @@ export function HeroSection() {
             >
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl gradient-text mb-6">
                 Revolutionizing Drug Discovery with AI
-                <span className="block text-foreground">Faster, Smarter, Safer. [Deployed: {new Date().toLocaleString()}]</span>
-
+                <span className="block text-foreground">Faster, Smarter, Safer.</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-xl">
                 Our AI-powered platform accelerates the drug discovery process by analyzing molecular structures,

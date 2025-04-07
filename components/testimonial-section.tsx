@@ -25,21 +25,21 @@ export function TestimonialSection() {
         "MediAI Discovery has transformed our research process. We've reduced our drug discovery timeline by 60% while increasing our success rate significantly.",
       name: "Dr. Sarah Johnson",
       title: "Research Director, PharmaTech Inc.",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://th.bing.com/th/id/OIP.9RihUOnsbyqOf4KH10BLLgHaHa?rs=1&pid=ImgDetMain",
     },
     {
       quote:
         "The AI-powered simulations have allowed us to test hypotheses that would have taken months in just days. This platform is revolutionizing how we approach drug development.",
       name: "Prof. Michael Chen",
       title: "Head of Molecular Biology, University Research Center",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3.iconfinder.com/data/icons/science-collection/383/scientist-512.png",
     },
     {
       quote:
         "The accuracy of the predictions from MediAI Discovery has been remarkable. We've been able to identify promising compounds that our traditional methods missed entirely.",
       name: "Dr. Emily Rodriguez",
       title: "Chief Scientific Officer, BioGenetics",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/old-scientist-avatar-3d-icon-download-in-png-blend-fbx-gltf-file-formats--science-research-profession-pack-people-icons-8179539.png",
     },
   ]
 

@@ -19,12 +19,12 @@ export function ContactFAQ() {
     {
       question: "What is MediAI Discovery?",
       answer:
-        "MediAI Discovery is an AI-powered platform designed to accelerate drug discovery and development. Our platform uses advanced machine learning algorithms to analyze molecular structures, predict interactions, and optimize formulations with unprecedented accuracy.",
+        "MediAI Discovery is a research-focused platform that helps students and researchers explore detailed drug information, modify molecular structures, and access relevant research articles. It combines AI tools with scientific data to simplify drug analysis and support advanced medical research and study—all in one free hub.",
     },
     {
       question: "How does your AI technology work?",
       answer:
-        "Our AI technology combines deep learning, quantum mechanical calculations, and molecular dynamics simulations to predict how potential drug compounds will interact with target proteins. The platform analyzes vast datasets of molecular structures and properties to identify promising candidates and optimize their efficacy.",
+        "Our AI technology works in real-time by pulling data from multiple verified drug databases. It intelligently processes user queries and provides accurate, structured information about drugs, including usage, structure, side effects, and research articles—everything you need, instantly and in one place.",
     },
     {
       question: "Do I need technical expertise to use your platform?",
@@ -34,17 +34,17 @@ export function ContactFAQ() {
     {
       question: "What types of research can benefit from your platform?",
       answer:
-        "Our platform is beneficial for a wide range of research areas including drug discovery, protein structure prediction, molecular docking, ADMET prediction, and clinical trial optimization. It's particularly valuable for researchers working in pharmaceutical development, biotechnology, and academic research.",
+        "MediAI supports research in drug repurposing, molecular modification, disease-based drug analysis, pharmacology, and biomedical studies. Whether you're exploring new treatments or studying drug interactions, our platform provides tools and data to boost academic research, clinical projects, and experimental drug design.",
     },
     {
       question: "How do I get started with MediAI Discovery?",
       answer:
-        "You can get started by requesting a demo through our website or contacting our sales team. We offer flexible subscription plans tailored to different research needs, from individual researchers to large pharmaceutical companies. Our team will guide you through the onboarding process and provide training on how to use the platform effectively.",
+        "Getting started with MediAI Discovery is simple. Just visit the platform, create a free account, and start exploring. You can search any drug by name, view its full profile, edit molecular structures, ask the AI bot questions, and access research articles—all in one seamless interface.",
     },
     {
-      question: "Is my research data secure on your platform?",
+      question: " How does MediAI help in drug repurposing research?",
       answer:
-        "Yes, we take data security very seriously. All data on our platform is encrypted both in transit and at rest. We comply with industry standards for data protection and privacy regulations. You retain full ownership of your research data, and we have strict policies in place to ensure confidentiality.",
+        "MediAI speeds up drug repurposing by giving instant access to drug profiles, chemical structures, and related research. Researchers can test structural changes, compare drug interactions, and study past findings—saving time, cost, and boosting innovation without starting from scratch like traditional discovery methods.",
     },
   ]
 

@@ -25,7 +25,7 @@ const articles = [
     date: "Mar 14, 2014",
     author: "Dominique Pahud",
     category: "Technology",
-    image: "https://www.pharmasalmanac.com/hubfs/Imported_Blog_Media/GettyImages-1371539465-1.jpg",
+    image: "https://th.bing.com/th/id/OIP.qCatdR5VGK1Un8JQnFMuUQHaEh?rs=1&pid=ImgDetMain",
     link: "https://www.kauffman.org/reports/a-new-market-access-path-for-repurposed-drugs/"
   },
   {
@@ -34,7 +34,7 @@ const articles = [
     date: "April 12, 2021",
     author: "Rohan Gupta, Devesh Srivastava",
     category: "Industry Trends",
-    image: "https://www.europeanpharmaceuticalreview.com/wp-content/uploads/AI-drug-discovery-1.jpg",
+    image: "https://biomedical-sciences.uq.edu.au/files/9019/RG.jpg",
     link: "https://link.springer.com/article/10.1007/s11030-021-10217-3"
   }
 ]
@@ -90,42 +90,42 @@ export function BlogSection() {
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
               }}
             >
-              <Link href={article.link} target="_blank" rel="noopener noreferrer">
-                <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={article.image}
-                      alt={article.title}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-primary hover:bg-primary/90">{article.category}</Badge>
-                    </div>
+              <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-primary hover:bg-primary/90">{article.category}</Badge>
                   </div>
-                  <CardHeader className="flex-grow">
-                    <CardTitle className="line-clamp-2">{article.title}</CardTitle>
-                    <CardDescription className="line-clamp-3 mt-2">{article.description}</CardDescription>
-                  </CardHeader>
-                  <CardFooter className="border-t pt-4 flex justify-between items-center">
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="mr-1 h-4 w-4" />
-                      {article.date}
-                    </div>
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <User className="mr-1 h-4 w-4" />
-                      {article.author}
-                    </div>
-                  </CardFooter>
-                </Card>
-              </Link>
+                </div>
+                <CardHeader className="flex-grow">
+                  <CardTitle className="line-clamp-2">{article.title}</CardTitle>
+                  <CardDescription className="line-clamp-3 mt-2">{article.description}</CardDescription>
+                </CardHeader>
+                <CardFooter className="border-t pt-4 flex justify-between items-center">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Calendar className="mr-1 h-4 w-4" />
+                    {article.date}
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <User className="mr-1 h-4 w-4" />
+                    {article.author}
+                  </div>
+                </CardFooter>
+              </Card>
             </motion.div>
           ))}
         </motion.div>
 
         <div className="flex justify-center mt-12">
-          <Button variant="outline" size="lg">
-            View All Articles
-            <ArrowRight className="ml-2 h-4 w-4" />
+          <Button variant="outline" size="lg" asChild>
+            <Link href="/research">
+              View All Articles
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </div>

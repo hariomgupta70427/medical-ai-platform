@@ -43,11 +43,11 @@ export function ContactInfo() {
             <div>
               <h3 className="font-medium mb-1">Office Location</h3>
               <p className="text-muted-foreground">
-                123 Innovation Drive
+              Plot No. 3, Knowledge Park II
                 <br />
-                San Francisco, CA 94107
+                Greater Noida, Uttar Pradesh 201306
                 <br />
-                United States
+                India
               </p>
             </div>
           </div>
@@ -59,9 +59,9 @@ export function ContactInfo() {
             <div>
               <h3 className="font-medium mb-1">Phone</h3>
               <p className="text-muted-foreground">
-                Main: +1 (555) 123-4567
+                Main: +91 9818381004
                 <br />
-                Support: +1 (555) 987-6543
+                Support: +91 8306164181
               </p>
             </div>
           </div>
@@ -73,11 +73,11 @@ export function ContactInfo() {
             <div>
               <h3 className="font-medium mb-1">Email</h3>
               <p className="text-muted-foreground">
-                General Inquiries: info@mediai-discovery.com
+                General Inquiries: keshav5678kunj@gmail.com 
                 <br />
-                Support: support@mediai-discovery.com
+                Support: mamta.talati@lsp.edu.in 
                 <br />
-                Partnerships: partners@mediai-discovery.com
+                Partnerships: guptahariom045@gmail.com
               </p>
             </div>
           </div>
