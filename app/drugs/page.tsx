@@ -1,7 +1,7 @@
 "use client"
 
-import { DrugSearch } from "@/components/DrugSearch"
-import { Navbar } from "@/components/navbar"
+import { DrugSearch } from '@/components/DrugSearch'
+import { Navbar } from '@/components/navbar'
 
 export default function DrugsPage() {
   return (
@@ -20,4 +20,4 @@ export default function DrugsPage() {
       </main>
     </div>
   )
-} 
+}

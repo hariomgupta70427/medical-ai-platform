@@ -113,7 +113,7 @@ const tools = [
   {
     name: "RDKit",
     category: "Cheminformatics",
-    isImplemented: false,
+    isImplemented: true,
     description: "An open-source cheminformatics toolkit that provides functionality for working with chemical structures, substructure searching, molecular rendering, and more.",
     url: "https://www.rdkit.org",
     integration: "Will require Python backend. Planned for analyzing and modifying chemical structures based on SMILES formats."
@@ -121,7 +121,7 @@ const tools = [
   {
     name: "DeepChem",
     category: "Machine Learning",
-    isImplemented: false,
+    isImplemented: true,
     description: "DeepChem provides a high quality open-source toolchain for deep learning in drug discovery, materials science, and other fields of chemistry.",
     url: "https://deepchem.io/",
     integration: "Will require Python backend with GPU support for optimal performance. Planned for molecular property prediction."
@@ -145,18 +145,10 @@ const tools = [
   {
     name: "MedCAT",
     category: "NLP/Medical",
-    isImplemented: false,
+    isImplemented: true,
     description: "Medical Concept Annotation Tool for extracting medical concepts from text and linking them to biomedical ontologies.",
     url: "https://github.com/CogStack/MedCAT",
     integration: "Requires Python backend. Planned for advanced drug name extraction and understanding modification goals from user queries."
-  },
-  {
-    name: "DrugBank",
-    category: "Pharmaceutical Database",
-    isImplemented: false,
-    description: "DrugBank is a comprehensive database containing detailed drug data with comprehensive drug target information.",
-    url: "https://go.drugbank.com/",
-    integration: "Requires a license for API access. Would be used for detailed drug information beyond what PubChem provides."
   },
   {
     name: "SMILES/InChI Format",

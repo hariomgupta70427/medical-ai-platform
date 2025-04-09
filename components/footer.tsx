@@ -128,15 +128,15 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 mr-2 text-primary shrink-0 mt-0.5" />
-                <span className="text-muted-foreground">123 Innovation Drive, San Francisco, CA 94107</span>
+                <span className="text-muted-foreground">Plot No. 3, Knowledge Park II, Greater Noida, Uttar Pradesh 201306</span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-2 text-primary shrink-0" />
-                <span className="text-muted-foreground">+1 (555) 123-4567</span>
+                <span className="text-muted-foreground">+91 9818381004</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 text-primary shrink-0" />
-                <span className="text-muted-foreground">info@mediai-discovery.com</span>
+                <span className="text-muted-foreground">keshav5678kunj@gmail.com</span>
               </li>
             </ul>
           </div>
