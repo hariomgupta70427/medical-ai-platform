@@ -100,7 +100,7 @@ export async function GET(request: Request) {
 
       // Use batch endpoint to get multiple compounds at once for better performance
       let cids = searchData.IdentifierList.CID.slice(0, 5).join(",");
-      const batchUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cids}/property/MolecularFormula,MolecularWeight,CanonicalSMILES,InChIKey/JSON`;
+      const batchUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cids}/property/MolecularFormula,MolecularWeight,CanonicalSMILES,InChIKey,IUPACName/JSON`;
       
       try {
         console.log('Fetching batch details for CIDs:', cids);
@@ -162,7 +162,7 @@ export async function GET(request: Request) {
       const compounds = await Promise.all(
         searchData.IdentifierList.CID.slice(0, 5).map(async (cid: number) => {
           // Use a simplified property list to avoid 400 BadRequest errors
-          const detailUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/MolecularFormula,MolecularWeight,CanonicalSMILES,InChIKey/JSON`;
+          const detailUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/MolecularFormula,MolecularWeight,CanonicalSMILES,InChIKey,IUPACName/JSON`;
           
           console.log('Fetching details for CID:', cid);
           const detailResponse = await fetch(detailUrl, {
@@ -241,7 +241,7 @@ export async function GET(request: Request) {
       if (!detailResponse.ok) {
         // Try with an even more simplified property list
         console.log('Retrying with fewer properties...');
-        const fallbackUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/MolecularFormula,MolecularWeight,CanonicalSMILES,InChIKey/JSON`;
+        const fallbackUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/MolecularFormula,MolecularWeight,CanonicalSMILES,InChIKey,IUPACName/JSON`;
         
         const fallbackResponse = await fetch(fallbackUrl, {
           headers: { 
