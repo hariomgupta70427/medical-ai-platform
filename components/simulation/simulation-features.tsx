@@ -1,20 +1,29 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { motion, useInView, useAnimation } from "framer-motion"
-import { Atom, Brain, LineChart, Zap, Shield, Database } from "lucide-react"
+import { motion, useAnimation } from "framer-motion"
+import { useInView } from "react-intersection-observer"
+import { 
+  Atom, 
+  Brain, 
+  LineChart, 
+  Zap, 
+  Shield, 
+  Database,
+  FlaskConical,
+  Microscope
+} from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function SimulationFeatures() {
   const controls = useAnimation()
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 })
 
   useEffect(() => {
-    if (isInView) {
+    if (inView) {
       controls.start("visible")
     }
-  }, [controls, isInView])
+  }, [controls, inView])
 
   const features = [
     {

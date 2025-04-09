@@ -19,35 +19,35 @@ export function FeaturesSection() {
   const features = [
     {
       icon: Search,
-      title: "Advanced Search",
+      title: "Drug Candidate Screening",
       description:
-        "Powerful search capabilities with real-time suggestions for drug names, proteins, and formulations.",
+        "AI-powered screening of existing medications to identify those with potential for treating different conditions.",
     },
     {
       icon: Database,
-      title: "Comprehensive Database",
+      title: "Multi-Disease Database",
       description:
-        "Access detailed information on drug mechanisms, chemical compositions, and AI-predicted effectiveness.",
+        "Comprehensive database mapping drugs to multiple diseases based on mechanism of action and molecular targets.",
     },
     {
       icon: Flask,
-      title: "Virtual Testing",
-      description: "Simulate drug interactions and effects in a virtual environment before physical testing.",
+      title: "In-Silico Validation",
+      description: "Virtual testing of repurposed drugs against new disease targets before moving to clinical trials.",
     },
     {
       icon: Dna,
-      title: "Molecular Analysis",
-      description: "Advanced analysis of molecular structures to identify potential therapeutic compounds.",
+      title: "Target Pathway Analysis",
+      description: "Identification of shared biological pathways between different diseases for effective drug repurposing.",
     },
     {
       icon: Brain,
-      title: "AI Predictions",
-      description: "Machine learning algorithms that predict drug efficacy and potential side effects.",
+      title: "Polypharmacology Prediction",
+      description: "Advanced algorithms that predict how existing drugs may affect multiple biological targets simultaneously.",
     },
     {
       icon: LineChart,
-      title: "Data Visualization",
-      description: "Interactive charts and graphs to visualize complex drug testing data and results.",
+      title: "Clinical Success Probability",
+      description: "Data-driven assessment of repurposed drug candidates' likelihood of clinical trial success.",
     },
   ]
 
@@ -55,10 +55,9 @@ export function FeaturesSection() {
     <section id="features" className="py-20">
       <div className="container">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Accelerate Your Research with AI</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Reimagine Drug Development Through Repurposing</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Our platform combines cutting-edge AI technology with comprehensive drug data to revolutionize the discovery
-            process.
+            Our platform leverages AI to identify and validate new uses for existing medications, offering a faster, more cost-effective path to new treatments.
           </p>
         </div>
 

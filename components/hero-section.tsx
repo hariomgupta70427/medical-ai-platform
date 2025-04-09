@@ -42,13 +42,14 @@ export function HeroSection() {
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
               }}
             >
-                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl gradient-text mb-6">
-                Revolutionizing Drug Discovery with AI
-                <span className="block text-foreground">Faster, Smarter, Safer.</span>
-              </h1>
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl gradient-text mb-2">
+                  AI-Powered Drug Repurposing
+                </h1>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl text-foreground mb-6">
+                  Transforming Known Medicines into New Therapies
+                </h2>
               <p className="text-xl text-muted-foreground mb-8 max-w-xl">
-                Our AI-powered platform accelerates the drug discovery process by analyzing molecular structures,
-                predicting interactions, and optimizing formulations with unprecedented accuracy.
+                Our advanced AI platform identifies novel applications for existing drugs, dramatically reducing development time and costs while expanding treatment options for patients with unmet medical needs.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="gradient-bg group">

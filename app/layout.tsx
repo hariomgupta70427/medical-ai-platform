@@ -2,6 +2,7 @@ import type React from "react"
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -18,7 +19,37 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <head />
+      <body className={`${inter.className} min-h-screen bg-background`}>
+        {/* jQuery is required for 3DMol.js */}
+        <Script 
+          src="https://code.jquery.com/jquery-3.6.4.min.js"
+          strategy="beforeInteractive"
+          integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+          crossOrigin="anonymous"
+        />
+        
+        {/* 3DMol.js for molecular visualization */}
+        <Script 
+          src="https://3Dmol.org/build/3Dmol-min.js"
+          strategy="beforeInteractive"
+        />
+        
+        {/* Initialize 3DMol for components */}
+        <Script
+          id="3dmol-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && window.$3Dmol) {
+                console.log('3DMol successfully loaded');
+              } else {
+                console.error('3DMol failed to load properly');
+              }
+            `,
+          }}
+        />
+        
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>
@@ -26,7 +57,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-
-import './globals.css'

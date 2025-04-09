@@ -1,81 +1,48 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { motion, useInView, useAnimation } from "framer-motion"
-import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Environment } from "@react-three/drei"
+import { motion, useAnimation } from "framer-motion"
+import { useInView } from "react-intersection-observer"
+import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 
-function MoleculeModel({ rotationSpeed = 1, bondLength = 2, atomSize = 1 }) {
-  return (
-    <>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
-
-      {/* Central atom */}
-      <mesh>
-        <sphereGeometry args={[atomSize, 32, 32]} />
-        <meshStandardMaterial color="#3b82f6" metalness={0.5} roughness={0.2} />
-      </mesh>
-
-      {/* Connected atoms */}
-      <mesh position={[bondLength, 0, 0]}>
-        <sphereGeometry args={[atomSize * 0.8, 32, 32]} />
-        <meshStandardMaterial color="#14b8a6" metalness={0.5} roughness={0.2} />
-      </mesh>
-
-      <mesh position={[-bondLength * 0.75, bondLength * 0.5, 0]}>
-        <sphereGeometry args={[atomSize * 0.6, 32, 32]} />
-        <meshStandardMaterial color="#f43f5e" metalness={0.5} roughness={0.2} />
-      </mesh>
-
-      <mesh position={[-bondLength * 0.5, -bondLength * 0.75, bondLength * 0.25]}>
-        <sphereGeometry args={[atomSize * 0.7, 32, 32]} />
-        <meshStandardMaterial color="#8b5cf6" metalness={0.5} roughness={0.2} />
-      </mesh>
-
-      {/* Bonds */}
-      <mesh position={[bondLength / 2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.1 * atomSize, 0.1 * atomSize, bondLength, 16]} />
-        <meshStandardMaterial color="#94a3b8" />
-      </mesh>
-
-      <mesh position={[-bondLength * 0.375, bondLength * 0.25, 0]} rotation={[0, 0, Math.PI / 4]}>
-        <cylinderGeometry args={[0.1 * atomSize, 0.1 * atomSize, bondLength * 0.75, 16]} />
-        <meshStandardMaterial color="#94a3b8" />
-      </mesh>
-
-      <mesh
-        position={[-bondLength * 0.25, -bondLength * 0.375, bondLength * 0.125]}
-        rotation={[Math.PI / 8, 0, -Math.PI / 3]}
-      >
-        <cylinderGeometry args={[0.1 * atomSize, 0.1 * atomSize, bondLength * 0.75, 16]} />
-        <meshStandardMaterial color="#94a3b8" />
-      </mesh>
-
-      <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={rotationSpeed} />
-      <Environment preset="studio" />
-    </>
+// Dynamically import Three.js components with SSR disabled
+const ThreeComponents = dynamic(() => import('./ThreeComponents'), { 
+  ssr: false,
+  loading: () => (
+    <div className="h-full w-full flex items-center justify-center bg-background/50">
+      <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+    </div>
   )
+})
+
+// This function is not used anymore as we're importing ThreeComponents directly
+function MoleculeModel() {
+  return null;
 }
 
 export function SimulationDemo() {
   const controls = useAnimation()
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true })
   const [activeTab, setActiveTab] = useState("interactive")
   const [rotationSpeed, setRotationSpeed] = useState(1)
   const [bondLength, setBondLength] = useState(2)
   const [atomSize, setAtomSize] = useState(1)
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    if (isInView) {
+    if (inView) {
       controls.start("visible")
     }
-  }, [controls, isInView])
+  }, [controls, inView])
+
+  // Only render Three.js components on the client
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   return (
     <section className="py-20">
@@ -105,9 +72,17 @@ export function SimulationDemo() {
             }}
             className="h-[500px] rounded-xl overflow-hidden shadow-xl border border-border/50"
           >
-            <Canvas>
-              <MoleculeModel rotationSpeed={rotationSpeed} bondLength={bondLength} atomSize={atomSize} />
-            </Canvas>
+            {isMounted ? (
+              <ThreeComponents 
+                rotationSpeed={rotationSpeed} 
+                bondLength={bondLength} 
+                atomSize={atomSize} 
+              />
+            ) : (
+              <div className="h-full w-full flex items-center justify-center bg-background/50">
+                <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+              </div>
+            )}
           </motion.div>
 
           <motion.div

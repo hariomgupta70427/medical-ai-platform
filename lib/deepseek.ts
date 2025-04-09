@@ -7,6 +7,8 @@
  * OpenRouter API Documentation: https://openrouter.ai/docs
  */
 
+import { DrugModificationData } from "./llmService";
+
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -133,4 +135,57 @@ export async function generateChatResponse(messages: ChatMessage[]): Promise<str
     });
     return `I'm sorry, I encountered an error while processing your request. ${error.message}`;
   }
+}
+
+/**
+ * Generate a drug modification explanation using the DeepSeek API
+ */
+export async function generateDrugModificationExplanation(
+  data: DrugModificationData
+): Promise<string> {
+  // In a real implementation, this would call the DeepSeek API
+  // For now, we'll return a fallback explanation
+  return `
+## Drug Modification Analysis: ${data.original_drug_name}
+
+The modification to ${data.original_drug_name} involves ${data.modification_description}. This change aims to ${data.modification_goal}, which could potentially provide important benefits such as ${data.expected_benefits}.
+
+However, this modification comes with potential trade-offs, including ${data.potential_drawbacks || 'some unknown risks that would require further testing'}.
+
+👉 **Bottom line**: This modification shows promise for improving ${data.original_drug_name}'s clinical profile, but would benefit from additional computational and experimental validation.
+
+(Note: This is a fallback explanation generated without using an LLM API. For more detailed insights, please configure an API key for DeepSeek or OpenAI.)
+`;
+}
+
+/**
+ * Format a prompt for the DeepSeek API based on drug modification data
+ */
+export function formatPromptFromData(data: DrugModificationData): string {
+  return `
+Analyze the following drug modification:
+
+Original Drug: ${data.original_drug_name}
+Original SMILES: ${data.original_smiles}
+Original Formula: ${data.original_formula}
+Original Purpose: ${data.original_purpose}
+
+Modified SMILES: ${data.modified_smiles}
+Modification Description: ${data.modification_description}
+Modification Goal: ${data.modification_goal}
+Expected Benefits: ${data.expected_benefits}
+${data.potential_drawbacks ? `Potential Drawbacks: ${data.potential_drawbacks}` : ''}
+${data.swissadme_summary ? `SwissADME Summary: ${data.swissadme_summary}` : ''}
+${data.toxicity_info ? `Toxicity Information: ${data.toxicity_info}` : ''}
+${data.mechanistic_insight ? `Mechanistic Insight: ${data.mechanistic_insight}` : ''}
+
+Provide a detailed scientific explanation of this drug modification, including:
+1. The scientific reasoning behind the modification
+2. How the structural changes affect the drug's behavior in the body
+3. The potential benefits compared to the original drug
+4. Any potential drawbacks or concerns
+5. A brief recommendation on whether this modification appears promising
+
+Format your response in Markdown with appropriate sections and scientific detail.
+`;
 } 

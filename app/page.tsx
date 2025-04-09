@@ -5,8 +5,6 @@ import { FeaturesSection } from "@/components/features-section"
 import { SimulationSection } from "@/components/simulation-section"
 import { BlogSection } from "@/components/blog-section"
 import { Footer } from "@/components/footer"
-import { PartnerSection } from "@/components/partner-section"
-import { TestimonialSection } from "@/components/testimonial-section"
 
 export default function Home() {
   return (
@@ -17,8 +15,6 @@ export default function Home() {
         <StatsSection />
         <FeaturesSection />
         <SimulationSection />
-        <PartnerSection />
-        <TestimonialSection />
         <BlogSection />
       </main>
       <Footer />

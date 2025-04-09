@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { getExampleExplanation } from '@/lib/llmService'
 import { FlaskConical, Beaker, Search } from 'lucide-react'
+import MoleculeVisualizer from "@/components/MoleculeVisualizer"
 
 const DRUGS = [
   { name: "Aspirin", smiles: "CC(=O)OC1=CC=CC=C1C(=O)O", modifiedSmiles: "CC(=O)OC1=CC=CC=C1C(=O)OCCO" },
@@ -254,34 +255,58 @@ export default function DemoExplanation() {
             </div>
 
             <div className="lg:col-span-2">
-              {currentMode === 'preset' ? (
+              {isGenerating ? (
                 <DrugExplanationCard
-                  drugName={selectedDrug.name}
-                  originalSmiles={selectedDrug.smiles}
-                  modifiedSmiles={selectedDrug.modifiedSmiles}
+                  drugName={currentMode === 'preset' ? selectedDrug.name : customDrug.name}
+                  originalSmiles={currentMode === 'preset' ? selectedDrug.smiles : customDrug.smiles}
+                  modifiedSmiles={currentMode === 'preset' ? selectedDrug.modifiedSmiles : customDrug.modifiedSmiles}
+                  explanation=""
+                  isLoading={true}
+                  provider="ai"
+                />
+              ) : explanation ? (
+                <DrugExplanationCard
+                  drugName={currentMode === 'preset' ? selectedDrug.name : customDrug.name}
+                  originalSmiles={currentMode === 'preset' ? selectedDrug.smiles : customDrug.smiles}
+                  modifiedSmiles={currentMode === 'preset' ? selectedDrug.modifiedSmiles : customDrug.modifiedSmiles}
                   explanation={explanation}
-                  isLoading={isGenerating}
-                  provider="demo"
+                  provider={currentMode === 'preset' ? 'ai' : 'ai'}
                 />
               ) : (
-                <DrugExplanationCard
-                  drugName={customDrug.name}
-                  originalSmiles={customDrug.smiles}
-                  modifiedSmiles={customDrug.modifiedSmiles}
-                  explanation={explanation}
-                  isLoading={isGenerating}
-                  provider="demo"
-                />
-              )}
-
-              {!explanation && !isGenerating && (
                 <Card className="w-full">
-                  <CardContent className="flex flex-col items-center justify-center min-h-[400px] py-12">
-                    <Search className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                    <h3 className="text-xl font-medium mb-2">No Explanation Generated</h3>
-                    <p className="text-center text-muted-foreground max-w-md">
-                      Select a drug from the list or enter your custom drug details, then click "Generate Explanation" to see the analysis.
-                    </p>
+                  <CardHeader>
+                    <CardTitle>Drug Modification Analysis</CardTitle>
+                    <CardDescription>
+                      Select a drug and generate an explanation to see the analysis
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="min-h-[300px] flex flex-col items-center justify-center text-center">
+                    <div className="mb-4">
+                      <Search className="h-12 w-12 text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground">
+                        No explanation generated yet. Select a drug and click "Generate Explanation".
+                      </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row justify-center gap-4 mt-4">
+                      <div className="flex flex-col items-center">
+                        <h3 className="text-sm font-medium mb-2">Original Structure Preview</h3>
+                        <MoleculeVisualizer 
+                          smiles={currentMode === 'preset' ? selectedDrug.smiles : customDrug.smiles || "CC(=O)OC1=CC=CC=C1C(=O)O"} 
+                          width={200} 
+                          height={150}
+                          className="bg-card"
+                        />
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <h3 className="text-sm font-medium mb-2">Modified Structure Preview</h3>
+                        <MoleculeVisualizer 
+                          smiles={currentMode === 'preset' ? selectedDrug.modifiedSmiles : customDrug.modifiedSmiles || "CC(=O)OC1=CC=CC=C1C(=O)OCCO"} 
+                          width={200} 
+                          height={150}
+                          className="bg-card"
+                        />
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               )}

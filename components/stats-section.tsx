@@ -17,24 +17,24 @@ export function StatsSection() {
 
   const stats = [
     {
-      value: "85%",
-      label: "Reduction in Drug Testing Time",
-      description: "Our AI algorithms significantly accelerate the testing process",
+      value: "75%",
+      label: "Time-to-Market Reduction",
+      description: "Repurposed drugs reach patients faster than traditional drug discovery",
     },
     {
-      value: "93%",
-      label: "Accuracy Improvement",
-      description: "Higher precision in predicting drug interactions and efficacy",
+      value: "90%",
+      label: "Development Cost Savings",
+      description: "Lower investment compared to developing new molecular entities",
     },
     {
-      value: "62+",
-      label: "Successful Discoveries",
-      description: "Novel compounds identified and validated through our platform",
+      value: "30+",
+      label: "Repurposed Drugs Identified",
+      description: "Existing medications with potential new therapeutic applications",
     },
     {
-      value: "40%",
-      label: "Cost Reduction",
-      description: "Lower development costs through AI-optimized processes",
+      value: "3.5×",
+      label: "Higher Success Rate",
+      description: "Repurposed drugs have greater clinical trial success probability",
     },
   ]
 

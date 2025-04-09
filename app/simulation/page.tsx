@@ -4,7 +4,6 @@ import { Footer } from "@/components/footer"
 import { SimulationHero } from "@/components/simulation/simulation-hero"
 import { SimulationDemo } from "@/components/simulation/simulation-demo"
 import { SimulationFeatures } from "@/components/simulation/simulation-features"
-import { SimulationCTA } from "@/components/simulation/simulation-cta"
 
 export const metadata: Metadata = {
   title: "AI-Powered Simulations | MediAI Discovery",
@@ -19,7 +18,6 @@ export default function SimulationPage() {
         <SimulationHero />
         <SimulationFeatures />
         <SimulationDemo />
-        <SimulationCTA />
       </main>
       <Footer />
     </div>

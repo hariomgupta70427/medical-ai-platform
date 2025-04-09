@@ -64,26 +64,32 @@ export function DrugExplanationCard({
       <CardContent className="space-y-6">
         {/* Molecule comparison section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
+          <div className="flex flex-col items-center border rounded-md p-4">
             <h3 className="text-sm font-medium mb-2">Original Structure</h3>
             <MoleculeVisualizer 
               smiles={originalSmiles} 
               width={300} 
               height={200}
-              title="Original"
+              title={drugName}
               className="bg-card"
             />
+            <div className="mt-2 text-xs text-center text-muted-foreground">
+              Original Drug: {drugName}
+            </div>
           </div>
           
-          <div>
+          <div className="flex flex-col items-center border rounded-md p-4">
             <h3 className="text-sm font-medium mb-2">Modified Structure</h3>
             <MoleculeVisualizer 
               smiles={modifiedSmiles} 
               width={300} 
               height={200}
-              title="Modified"
+              title={`Modified ${drugName}`}
               className="bg-card"
             />
+            <div className="mt-2 text-xs text-center text-muted-foreground">
+              Modified Version
+            </div>
           </div>
         </div>
         

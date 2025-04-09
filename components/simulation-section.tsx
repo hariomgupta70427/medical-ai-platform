@@ -1,26 +1,28 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { motion, useInView, useAnimation } from "framer-motion"
+import { motion, useAnimation } from "framer-motion"
+import { useInView } from "react-intersection-observer"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
-import Image from "next/image"
+import { ClientPubChemViewer } from "./simulation/ClientPubChemViewer"
+import { MoleculeSearch } from "./simulation/MoleculeSearch"
 
 // Remove Three.js components for now to fix the error
 // We'll add them back later when the site is working
 
 export function SimulationSection() {
   const controls = useAnimation()
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true })
   const [activeTab, setActiveTab] = useState("protein")
+  const [viewStyle, setViewStyle] = useState<'stick' | 'sphere' | 'line'>('stick')
 
   useEffect(() => {
-    if (isInView) {
+    if (inView) {
       controls.start("visible")
     }
-  }, [controls, isInView])
+  }, [controls, inView])
 
   return (
     <section className="py-16 bg-muted/50">
@@ -52,29 +54,76 @@ export function SimulationSection() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="protein">Protein Folding</TabsTrigger>
             <TabsTrigger value="binding">Ligand Binding</TabsTrigger>
-            <TabsTrigger value="pathway">Pathway Analysis</TabsTrigger>
+            <TabsTrigger value="pathway">Drug Pathways</TabsTrigger>
+            <TabsTrigger value="search">Search Molecules</TabsTrigger>
           </TabsList>
           
           <TabsContent value="protein">
             <Card>
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-                    <img 
-                      src="https://cdn.rcsb.org/images/structures/examples/protein-folding.gif" 
-                      alt="Protein Folding Simulation"
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="space-y-4">
+                    <div className="aspect-video bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                      <ClientPubChemViewer 
+                        cid={4173}
+                        pubchemUrl="https://pubchem.ncbi.nlm.nih.gov/rest/pug/conformers/0000104D00000001/JSON?response_type=display"
+                        height="100%"
+                        style={viewStyle}
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button 
+                        size="sm" 
+                        variant={viewStyle === 'stick' ? 'default' : 'outline'} 
+                        onClick={() => setViewStyle('stick')}
+                      >
+                        Stick Model
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant={viewStyle === 'sphere' ? 'default' : 'outline'} 
+                        onClick={() => setViewStyle('sphere')}
+                      >
+                        Space-filling
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant={viewStyle === 'line' ? 'default' : 'outline'} 
+                        onClick={() => setViewStyle('line')}
+                      >
+                        Wireframe
+                      </Button>
+                    </div>
                   </div>
+                  
                   <div className="flex flex-col justify-center">
                     <h3 className="text-2xl font-bold mb-4">Protein Folding Analysis</h3>
                     <p className="text-muted-foreground mb-6">
                       Our advanced AI algorithms predict protein folding patterns with unprecedented accuracy, 
-                      enabling faster identification of potential drug targets and interactions.
+                      enabling faster identification of potential drug targets and interactions. The visualization shows 
+                      the molecular structure of Aspirin (acetylsalicylic acid), one of the most widely used medications globally.
                     </p>
+                    <div className="space-y-2 mb-6">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <span className="text-sm">Carbon atoms (C)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <span className="text-sm">Oxygen atoms (O)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-blue-700"></div>
+                        <span className="text-sm">Nitrogen atoms (N)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                        <span className="text-sm">Hydrogen atoms (H)</span>
+                      </div>
+                    </div>
                     <Button>Learn More</Button>
                   </div>
                 </div>
@@ -86,18 +135,32 @@ export function SimulationSection() {
             <Card>
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-                    <img 
-                      src="https://cdn.rcsb.org/images/structures/examples/ligand-binding.gif" 
-                      alt="Ligand Binding Simulation"
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="space-y-4">
+                    <div className="aspect-video bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                      <ClientPubChemViewer 
+                        cid={2244}
+                        pubchemUrl="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/2244/record/JSON"
+                        height="100%"
+                        style="sphere"
+                      />
+                    </div>
+                    <p className="text-sm text-center text-muted-foreground">
+                      Aspirin binding to COX-2 enzyme (space-filling model)
+                    </p>
                   </div>
+                  
                   <div className="flex flex-col justify-center">
                     <h3 className="text-2xl font-bold mb-4">Ligand Binding Simulation</h3>
                     <p className="text-muted-foreground mb-6">
                       Visualize and analyze how different molecules interact with target proteins, 
-                      helping identify potential drug candidates more efficiently.
+                      helping identify potential drug candidates more efficiently. This 3D model showcases 
+                      Aspirin, which works by inhibiting the production of prostaglandins by binding to
+                      COX-1 and COX-2 enzymes.
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      The visualization demonstrates the molecular structure that enables this 
+                      compound to effectively bind to its target receptor, blocking the pain and
+                      inflammation response.
                     </p>
                     <Button>Explore Binding</Button>
                   </div>
@@ -110,22 +173,47 @@ export function SimulationSection() {
             <Card>
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-                    <img 
-                      src="https://cdn.rcsb.org/images/structures/examples/pathway-analysis.gif" 
-                      alt="Pathway Analysis"
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="space-y-4">
+                    <div className="aspect-video bg-muted rounded-lg overflow-hidden flex items-center justify-center">
+                      <ClientPubChemViewer 
+                        cid={1983}
+                        pubchemUrl="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/1983/record/JSON"
+                        height="100%"
+                        style="line"
+                      />
+                    </div>
+                    <p className="text-sm text-center text-muted-foreground">
+                      Acetaminophen (Paracetamol) - Wireframe molecular structure
+                    </p>
                   </div>
+                  
                   <div className="flex flex-col justify-center">
                     <h3 className="text-2xl font-bold mb-4">Metabolic Pathway Analysis</h3>
                     <p className="text-muted-foreground mb-6">
                       Study complex biological pathways and their interactions with potential drug compounds
-                      to better understand therapeutic effects and side effects.
+                      to better understand therapeutic effects and side effects. This visualization shows 
+                      Acetaminophen (Paracetamol), which is metabolized in the liver through multiple pathways.
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Our AI platform can analyze how this and similar compounds affect multiple pathways simultaneously, 
+                      predicting both beneficial effects and potential adverse reactions with unprecedented accuracy.
                     </p>
                     <Button>View Pathways</Button>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="search">
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-2xl font-bold mb-4">Search and Visualize Molecules</h3>
+                <p className="text-muted-foreground mb-6">
+                  Enter the name of any drug or chemical compound to visualize its 3D molecular structure.
+                  Our platform connects to the PubChem database to provide accurate structural information for thousands of compounds.
+                </p>
+                <MoleculeSearch />
               </CardContent>
             </Card>
           </TabsContent>

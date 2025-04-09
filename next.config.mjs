@@ -19,6 +19,19 @@ const nextConfig = {
   experimental: {
     webpackBuildWorker: true,
   },
+  webpack: (config, { isServer }) => {
+    // Handle Window is not defined error during server-side rendering
+    if (isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    
+    return config;
+  },
 }
 
 mergeConfig(nextConfig, userConfig)
