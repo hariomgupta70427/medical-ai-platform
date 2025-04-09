@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { suggestDrugModifications } from '@/lib/drugModification';
 import { generateExplanation } from '@/lib/llmService';
-import { fetchCompoundInfo } from '@/lib/pubchem';
+import { getCompoundByName } from '@/lib/pubchem';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30; // 30 seconds timeout
@@ -38,17 +38,15 @@ export async function POST(req: NextRequest) {
     }
 
     // Get drug information from PubChem
-    const drugInfo = await fetchCompoundInfo(targetDrug);
+    const drugInfo = await getCompoundByName(targetDrug);
     
     // Generate a scientific explanation for the first modification
-    // This is a simplified approach - in production, you might want to
-    // generate explanations for specific selected modifications
     const firstMod = modifications[0];
     
     const explanationData = {
       original_drug_name: targetDrug,
-      original_smiles: drugInfo?.smiles || "",
-      original_formula: drugInfo?.molecular_formula || "",
+      original_smiles: drugInfo?.CanonicalSMILES || "",
+      original_formula: drugInfo?.MolecularFormula || "",
       original_purpose: drugInfo?.description || firstMod.original_purpose || "Not available",
       modified_smiles: firstMod.modified_smiles || "",
       modification_description: firstMod.description || "",
@@ -64,7 +62,6 @@ export async function POST(req: NextRequest) {
     let explanation = "";
     
     try {
-      // Generate scientific explanation with fallback to demo mode if it fails
       explanation = await generateExplanation(explanationData);
     } catch (error) {
       console.error("Error generating explanation:", error);
@@ -86,12 +83,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Simple function to extract drug name from query
-// In production, this would use more sophisticated NLP
 function extractDrugName(query: string): string | null {
   if (!query) return null;
   
-  // List of common drug names to check for
   const commonDrugs = [
     'aspirin', 'ibuprofen', 'acetaminophen', 'paracetamol', 'lisinopril',
     'metformin', 'atorvastatin', 'simvastatin', 'amlodipine', 'amoxicillin',
