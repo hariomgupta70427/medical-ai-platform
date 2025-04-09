@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Search, Menu, X, MessageCircle, Wrench } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ModeToggle } from "@/components/mode-toggle"
-import { cn } from "@/lib/utils"
+import { Button } from "./ui/button"
+import { ModeToggle } from "./mode-toggle"
+import { cn } from "../lib/utils"
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -109,4 +109,3 @@ export function Navbar() {
     </header>
   )
 }
-
