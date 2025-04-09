@@ -1,6 +1,6 @@
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import SimpleDrugSearch from "./SimpleDrugSearch";
+import { DrugSearch } from "@/components/DrugSearch";
 
 export default function SimpleSearchPage() {
   return (
@@ -9,9 +9,9 @@ export default function SimpleSearchPage() {
         <div className="space-y-4">
           <Heading title="Simple Drug Search" description="Search for drugs and get basic information" />
           <Separator />
-          <SimpleDrugSearch />
+          <DrugSearch />
         </div>
       </div>
     </div>
   );
-} 
+}
