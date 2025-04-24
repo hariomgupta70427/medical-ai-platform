@@ -57,34 +57,101 @@ async function processQueue() {
  */
 export class PubChemService {
   /**
-   * Get SMILES notation for a compound by name
+   * Get SMILES notation for a compound by name with enhanced error handling
+   * and alternative search methods
    * @param name The name of the compound
    * @returns SMILES notation
    */
   async getSmilesByName(name: string): Promise<string | null> {
     return enqueueRequest(async () => {
       try {
-        // First, get the compound CID (PubChem Compound ID)
-        const url = `${PUBCHEM_API_BASE}/compound/name/${encodeURIComponent(name)}/cids/TXT`;
+        // Normalize the drug name
+        const normalizedName = name.trim();
         
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          if (response.status === 404) {
-            console.log(`Compound not found: ${name}`);
-            return null;
-          }
-          throw new Error(`PubChem API error: ${response.statusText}`);
+        if (!normalizedName) {
+          console.log('Empty drug name provided');
+          return null;
         }
         
-        const cid = await response.text();
+        console.log(`Searching for SMILES by name: "${normalizedName}"`);
         
-        if (!cid || cid.trim() === '') {
+        // Method 1: Try direct name lookup with CID
+        let cid = await this.getCompoundCID(normalizedName);
+        
+        // Method 2: If direct name fails, try alternative names/synonyms
+        if (!cid) {
+          console.log(`Direct CID lookup failed for "${normalizedName}", trying alternative methods...`);
+          
+          // Try name with different case variations (e.g., paracetamol, Paracetamol, PARACETAMOL)
+          const variations = [
+            normalizedName.toLowerCase(),
+            normalizedName.toUpperCase(),
+            normalizedName.charAt(0).toUpperCase() + normalizedName.slice(1).toLowerCase()
+          ];
+          
+          for (const variant of variations) {
+            if (variant !== normalizedName) {
+              cid = await this.getCompoundCID(variant);
+              if (cid) {
+                console.log(`Found CID using name variant: "${variant}"`);
+                break;
+              }
+            }
+          }
+          
+          // Method 3: If case variations fail, try common alternative names
+          if (!cid) {
+            const alternativeNames: Record<string, string[]> = {
+              'paracetamol': ['acetaminophen', 'tylenol', 'panadol'],
+              'acetaminophen': ['paracetamol', 'tylenol', 'panadol'],
+              'aspirin': ['acetylsalicylic acid', 'asa'],
+              'ibuprofen': ['advil', 'motrin', 'nurofen'],
+            };
+            
+            const normalized = normalizedName.toLowerCase();
+            
+            // Check if we have alternatives for this drug
+            for (const [primary, alternatives] of Object.entries(alternativeNames)) {
+              if (primary === normalized || alternatives.includes(normalized)) {
+                // Try all related names
+                const allNames = [primary, ...alternatives];
+                for (const altName of allNames) {
+                  if (altName !== normalized) {
+                    console.log(`Trying alternative name: "${altName}"`);
+                    cid = await this.getCompoundCID(altName);
+                    if (cid) {
+                      console.log(`Found CID using alternative name: "${altName}"`);
+                      break;
+                    }
+                  }
+                }
+              }
+              if (cid) break;
+            }
+          }
+          
+          // Method 4: Try using search endpoint as a last resort
+          if (!cid) {
+            try {
+              console.log(`Trying compound search for: "${normalizedName}"`);
+              const compounds = await this.searchCompound(normalizedName);
+              if (compounds && compounds.length > 0 && compounds[0].id) {
+                cid = compounds[0].id.id.cid.toString();
+                console.log(`Found CID using search: ${cid}`);
+              }
+            } catch (error) {
+              console.warn('Search method failed:', error);
+            }
+          }
+        }
+        
+        if (!cid) {
+          console.log(`No CID found for any variation of "${name}"`);
           return null;
         }
         
         // Now get the SMILES for this CID
-        const smilesUrl = `${PUBCHEM_API_BASE}/compound/cid/${cid.trim()}/property/CanonicalSMILES/TXT`;
+        const smilesUrl = `${PUBCHEM_API_BASE}/compound/cid/${cid.trim()}/property/IsomericSMILES,CanonicalSMILES/JSON`;
         
         const smilesResponse = await fetch(smilesUrl);
         
@@ -92,8 +159,28 @@ export class PubChemService {
           throw new Error(`PubChem API error: ${smilesResponse.statusText}`);
         }
         
-        const smiles = await smilesResponse.text();
-        return smiles.trim();
+        const smilesData = await smilesResponse.json();
+        
+        // Log full response for debugging
+        console.log('SMILES data response:', JSON.stringify(smilesData, null, 2));
+        
+        if (!smilesData.PropertyTable || 
+            !smilesData.PropertyTable.Properties || 
+            smilesData.PropertyTable.Properties.length === 0) {
+          console.log(`No SMILES data found for CID ${cid}`);
+          return null;
+        }
+        
+        // Prefer IsomericSMILES if available, fall back to CanonicalSMILES
+        const prop = smilesData.PropertyTable.Properties[0];
+        const smiles = prop.IsomericSMILES || prop.CanonicalSMILES;
+        
+        if (!smiles) {
+          console.log(`SMILES properties not found in response for CID ${cid}`);
+          return null;
+        }
+        
+        return smiles;
       } catch (error) {
         console.error('Error fetching SMILES from PubChem:', error);
         return null;
@@ -192,16 +279,28 @@ export class PubChemService {
   }
 
   /**
-   * Get a compound's CID by name
+   * Get a compound's CID by name with enhanced error handling
    * @param name The name of the compound
    * @returns PubChem Compound ID (CID)
    */
   async getCompoundCID(name: string): Promise<string | null> {
     return enqueueRequest(async () => {
       try {
-        const url = `${PUBCHEM_API_BASE}/compound/name/${encodeURIComponent(name)}/cids/TXT`;
+        if (!name || name.trim() === '') {
+          console.log('Empty name provided to getCompoundCID');
+          return null;
+        }
+        
+        // Properly encode the name for URL
+        const encodedName = encodeURIComponent(name.trim());
+        const url = `${PUBCHEM_API_BASE}/compound/name/${encodedName}/cids/TXT`;
+        
+        console.log(`Fetching CID from URL: ${url}`);
         
         const response = await fetch(url);
+        
+        // Log response status for debugging
+        console.log(`CID lookup response status: ${response.status} ${response.statusText}`);
         
         if (!response.ok) {
           if (response.status === 404) {
@@ -211,10 +310,21 @@ export class PubChemService {
           throw new Error(`PubChem API error: ${response.statusText}`);
         }
         
-        const cid = await response.text();
-        return cid.trim();
+        const cidText = await response.text();
+        console.log(`CID response text: "${cidText}"`);
+        
+        if (!cidText || cidText.trim() === '') {
+          console.log(`No CID found for: ${name}`);
+          return null;
+        }
+        
+        // Extract the first CID if multiple are returned
+        const cid = cidText.trim().split('\n')[0].trim();
+        console.log(`Found CID: ${cid} for name: ${name}`);
+        
+        return cid;
       } catch (error) {
-        console.error('Error fetching CID from PubChem:', error);
+        console.error(`Error fetching CID from PubChem for name "${name}":`, error);
         return null;
       }
     });

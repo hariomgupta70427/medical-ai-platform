@@ -1,86 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PubChemService } from "@/lib/pubchem";
-import { getEnv } from "@/lib/env";
+// Dynamic import of RDKit
+const RDKit = require('@rdkit/rdkit');
 
-const RDKIT_SERVICE_URL = getEnv('RDKIT_SERVICE_URL') || 'http://localhost:5000';
+// Initialize RDKit
+let rdkit: any = null;
+let rdkitPromise: Promise<any> | null = null;
 
-// Helper function to check if a string contains a valid SVG
-function isValidSvg(content: string): boolean {
-  return content.trim().startsWith('<svg') && content.includes('</svg>');
-}
+// Cache for previously processed molecules
+const moleculeCache: Record<string, string> = {};
 
-async function callRdKitService(smiles: string) {
-  try {
-    const params = new URLSearchParams({
-      smiles,
-      width: '400',
-      height: '300',
-      addStereoAnnotation: 'true',
-      bondLineWidth: '2.0'
-    });
-
-    const url = `${RDKIT_SERVICE_URL}/visualize?${params}`;
-    console.log(`Calling RDKit service at: ${url}`);
-    
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'image/svg+xml'
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`RDKit service returned ${response.status}`);
-    }
-
-    const svgContent = await response.text();
-    
-    // Verify we got valid SVG content
-    if (!isValidSvg(svgContent)) {
-      throw new Error('Invalid SVG content received from RDKit service');
-    }
-    
-    return svgContent;
-  } catch (error) {
-    console.error('RDKit service error:', error);
-    throw error;
-  }
-}
-
-async function getPubChemSvg(smiles: string) {
-  try {
-    const pubchem = new PubChemService();
-    const compound = await pubchem.getCompoundBySmiles(smiles);
-    
-    if (compound && compound.cid) {
-      return `https://pubchem.ncbi.nlm.nih.gov/image/imgsrv.fcgi?cid=${compound.cid}&t=l`;
-    }
-    throw new Error('Could not find compound in PubChem');
-  } catch (error) {
-    console.error('PubChem error:', error);
-    throw error;
-  }
-}
-
-// Generate a placeholder SVG
-function generatePlaceholderSvg(message: string, smiles: string) {
-  // Truncate SMILES if it's too long
-  const displaySmiles = smiles.length > 30 ? smiles.substring(0, 27) + '...' : smiles;
+// Function to initialize RDKit once and reuse
+async function getRDKit() {
+  if (rdkit) return rdkit;
   
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
-  <rect width="300" height="200" fill="#f8f9fa" rx="10" ry="10" />
-  <text x="150" y="90" font-family="Arial" font-size="14" text-anchor="middle">${message}</text>
-  <text x="150" y="110" font-family="monospace" font-size="10" text-anchor="middle" fill="#3b82f6">${displaySmiles}</text>
-</svg>`;
+  if (!rdkitPromise) {
+    // Use the initRDKitModule function from the imported module
+    rdkitPromise = RDKit.initRDKitModule();
+  }
+  
+  try {
+    rdkit = await rdkitPromise;
+    return rdkit;
+  } catch (error) {
+    console.error('Failed to initialize RDKit:', error);
+    throw new Error('Failed to initialize molecular visualization library');
+  }
 }
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const smiles = searchParams.get('smiles');
-  const width = parseInt(searchParams.get('width') || '300', 10);
-  const height = parseInt(searchParams.get('height') || '200', 10);
-
+  const url = new URL(request.url);
+  const smiles = url.searchParams.get('smiles');
+  const width = parseInt(url.searchParams.get('width') || '300');
+  const height = parseInt(url.searchParams.get('height') || '200');
+  
   if (!smiles) {
     return NextResponse.json(
       { error: 'SMILES parameter is required' },
@@ -88,104 +40,97 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Check if RDKIT_SERVICE_URL is set
-  const isRdKitEnabled = !!RDKIT_SERVICE_URL;
-  console.log(`RDKit service ${isRdKitEnabled ? 'enabled' : 'disabled'}`);
+  // Check if molecule is in cache
+  const cacheKey = `${smiles}-${width}x${height}`;
+  if (moleculeCache[cacheKey]) {
+    return new NextResponse(moleculeCache[cacheKey], {
+      headers: {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'public, max-age=86400'
+      }
+    });
+  }
 
   try {
-    // Try PubChem first as it's more reliable for visualization
+    // Try to fetch from PubChem first (more reliable for common molecules)
     try {
-      const pubchemimageSvg = await getPubChemImageAsSvg(smiles, width, height);
-      return new NextResponse(pubchemimageSvg, {
+      const encodedSmiles = encodeURIComponent(smiles);
+      const pubchemUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/${encodedSmiles}/PNG?image_size=${width}x${height}`;
+      
+      const pubchemPromise = fetch(pubchemUrl);
+      const timeoutPromise = new Promise<null>((_, reject) => {
+        setTimeout(() => reject(new Error('PubChem request timed out')), 2000); // Reduced from 3000ms to 2000ms
+      });
+      
+      const result = await Promise.race([pubchemPromise, timeoutPromise]);
+      if (result && 'ok' in result && result.ok) {
+        const blob = await result.blob();
+        const buffer = await blob.arrayBuffer();
+        
+        return new NextResponse(buffer, {
+          headers: {
+            'Content-Type': 'image/png',
+            'Cache-Control': 'public, max-age=86400'
+          }
+        });
+      }
+    } catch (e) {
+      // Continue to RDKit rendering
+    }
+
+    // If PubChem fails, use RDKit
+    const rdk = await getRDKit();
+    
+    try {
+      // Validate the SMILES by attempting to create a molecule
+      const mol = rdk.get_mol(smiles);
+      
+      if (!mol || mol.is_null()) {
+        return NextResponse.json(
+          { error: 'Invalid SMILES string' },
+          { status: 400 }
+        );
+      }
+      
+      // Generate SVG
+      const svg = mol.get_svg(width, height);
+      
+      // Clean up the molecule object
+      mol.delete(); 
+      
+      // Cache the result
+      moleculeCache[cacheKey] = svg;
+      
+      return new NextResponse(svg, {
         headers: {
           'Content-Type': 'image/svg+xml',
           'Cache-Control': 'public, max-age=86400'
-        },
+        }
       });
-    } catch (pubChemError) {
-      console.error('PubChem visualization failed:', pubChemError);
-      // Fall through to placeholder
+    } catch (error: any) {
+      // Generate a fallback SVG with the SMILES as text
+      const fallbackSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+          <rect width="100%" height="100%" fill="#f8f9fa" rx="10" ry="10" />
+          <text x="50%" y="50%" font-family="Arial" font-size="12" text-anchor="middle" fill="#6c757d">
+            ${smiles.length > 30 ? `${smiles.substring(0, 27)}...` : smiles}
+          </text>
+        </svg>
+      `;
+      
+      return new NextResponse(fallbackSvg, {
+        headers: {
+          'Content-Type': 'image/svg+xml',
+          'Cache-Control': 'public, max-age=86400'
+        }
+      });
     }
-
-    // If PubChem fails, return a placeholder SVG
-    const placeholderSvg = generatePlaceholderSvg('Unable to visualize molecule', smiles);
-    return new NextResponse(placeholderSvg, {
-      headers: {
-        'Content-Type': 'image/svg+xml'
-      },
-    });
-  } catch (error) {
-    console.error('Error generating molecule visualization:', error);
+  } catch (error: any) {
+    console.error('Molecule visualization error:', error);
+    
     return NextResponse.json(
-      { error: 'Failed to generate molecule visualization' },
+      { error: error.message || 'Failed to generate molecule visualization' },
       { status: 500 }
     );
   }
-}
-
-async function getPubChemImageAsSvg(smiles: string, width: number, height: number) {
-  try {
-    // Create a PubChem service instance
-    const pubchem = new PubChemService();
-    
-    // Try to get the compound by SMILES
-    const compound = await pubchem.getCompoundBySmiles(smiles);
-    
-    if (compound && compound.cid) {
-      // Return an SVG that embeds the PubChem image
-      return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-  <image width="${width}" height="${height}" 
-         href="https://pubchem.ncbi.nlm.nih.gov/image/imgsrv.fcgi?cid=${compound.cid}&t=l" 
-         preserveAspectRatio="xMidYMid meet" />
-</svg>`;
-    }
-    
-    // If we couldn't get a CID, use the direct SMILES rendering from PubChem
-    const encodedSmiles = encodeURIComponent(smiles);
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-  <image width="${width}" height="${height}" 
-         href="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/${encodedSmiles}/PNG?image_size=${width}x${height}" 
-         preserveAspectRatio="xMidYMid meet" />
-</svg>`;
-  } catch (error) {
-    console.error('Error fetching PubChem image:', error);
-    throw error;
-  }
-}
-
-async function callPubChemVisualization(smiles: string, width: number, height: number) {
-  // Convert SMILES to URL-encoded format for PubChem
-  const encodedSmiles = encodeURIComponent(smiles);
-  
-  // Use PubChem's PUG View API to get a PNG image
-  // This will return an SVG that redirects to the PubChem image
-  const svgRedirect = `<?xml version="1.0" encoding="UTF-8"?>
-  <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-    <image width="${width}" height="${height}" href="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/${encodedSmiles}/PNG?image_size=${width}x${height}" />
-  </svg>`;
-  
-  return new NextResponse(svgRedirect, {
-    status: 200,
-    headers: {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=86400'
-    }
-  });
-}
-
-function generatePlaceholderSVG(smiles: string): string {
-  // Truncate SMILES if it's too long
-  const displaySmiles = smiles.length > 30 ? smiles.substring(0, 27) + '...' : smiles;
-  
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="300" height="150" viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
-  <rect width="300" height="150" fill="#f8f9fa" rx="10" ry="10" />
-  <text x="150" y="45" font-family="Arial" font-size="14" text-anchor="middle">Molecule Visualization</text>
-  <text x="150" y="65" font-family="Arial" font-size="10" text-anchor="middle">(Visualization service unavailable)</text>
-  <text x="150" y="95" font-family="monospace" font-size="10" text-anchor="middle" fill="#3b82f6">${displaySmiles}</text>
-  <text x="150" y="130" font-family="Arial" font-size="8" text-anchor="middle">Unable to connect to RDKit service</text>
-  <text x="150" y="140" font-family="Arial" font-size="8" text-anchor="middle">Please verify that the Python service is running</text>
-</svg>`;
 } 

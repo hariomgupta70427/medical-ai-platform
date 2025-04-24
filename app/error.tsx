@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Navbar } from '@/components/navbar'
+import { Navbar } from '../components/navbar'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 
