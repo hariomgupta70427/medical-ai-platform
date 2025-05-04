@@ -83,7 +83,7 @@ export async function generateChatResponse(messages: ChatMessage[]): Promise<str
           'X-Title': 'MediAI Drug Discovery Assistant'
         },
         body: JSON.stringify({
-          model: 'google/gemini-pro',
+          model: 'gpt-4o-mini',
           messages: formattedMessages,
           temperature: 0.7,
           max_tokens: 800
