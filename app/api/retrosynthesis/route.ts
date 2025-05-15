@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMockRetrosynthesisData } from './mock-data';
+import * as openSourceSynthesis from '../../../lib/openSourceSynthesis';
 
 // Create a simplified version of PubChemService to avoid import issues
 class PubChemService {
@@ -121,6 +122,60 @@ export async function GET(request: NextRequest) {
       
       console.log(`Processing drug name request: "${sanitizedDrugName}"`);
       
+      // Check for open source synthetic routes first
+      const openSourceRoute = openSourceSynthesis.findByName(sanitizedDrugName) || 
+                             openSourceSynthesis.findByAlternateName(sanitizedDrugName);
+      
+      if (openSourceRoute) {
+        console.log(`Found open source synthetic route for: ${sanitizedDrugName}`);
+        const formattedRoute = openSourceSynthesis.formatRoute(openSourceRoute);
+        
+        // Create a minimal drug info object
+        drugInfo = {
+          name: sanitizedDrugName,
+          smiles: openSourceRoute.targetMolecule,
+          source: openSourceRoute.source
+        };
+        
+        // Skip PubChem lookup and use our known data
+        targetSmiles = openSourceRoute.targetMolecule;
+        
+        // Return the response with open source data
+        return NextResponse.json({
+          drug: drugInfo,
+          retrosynthesis: formattedRoute
+        });
+      }
+      
+      // If no open source route is found, try similar names
+      const similarNames = openSourceSynthesis.findSimilarNames(sanitizedDrugName, 0.7);
+      if (similarNames.length > 0) {
+        console.log(`Found similar open source route: ${similarNames[0]} for query: ${sanitizedDrugName}`);
+        const similarRoute = openSourceSynthesis.findByName(similarNames[0]);
+        
+        if (similarRoute) {
+          const formattedRoute = openSourceSynthesis.formatRoute(similarRoute);
+          
+          // Create a drug info object
+          drugInfo = {
+            name: sanitizedDrugName,
+            smiles: similarRoute.targetMolecule,
+            source: similarRoute.source,
+            similarMatch: similarNames[0]
+          };
+          
+          // Use the similar route's SMILES
+          targetSmiles = similarRoute.targetMolecule;
+          
+          // Return the response with similar open source data
+          return NextResponse.json({
+            drug: drugInfo,
+            retrosynthesis: formattedRoute
+          });
+        }
+      }
+      
+      // If no open source route is found, continue with PubChem lookup
       const pubchem = new PubChemService();
       
       try {

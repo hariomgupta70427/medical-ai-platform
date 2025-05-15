@@ -10,6 +10,7 @@ import SyntheticRouteDisplay from '@/components/SyntheticRouteDisplay';
 import { SearchIcon, HelpCircleIcon, RefreshCw } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Navbar } from '@/components/navbar';
+import { scheduleRegularUpdates } from '@/lib/syntheticRouteUpdater';
 
 // Add a function to get PubChem direct image URL
 function getPubChemImageUrl(name: string) {
@@ -27,7 +28,10 @@ const DRUG_SUGGESTIONS = [
   'Tylenol',
   'Advil',
   'Disprin',
-  'Crocin'
+  'Crocin',
+  'Metformin',
+  'Atorvastatin',
+  'Losartan'
 ];
 
 // Add a mapping for brand to generic names for UI suggestions
@@ -38,7 +42,11 @@ const BRAND_TO_GENERIC: Record<string, string> = {
   'Disprin': 'Aspirin',
   'Advil': 'Ibuprofen',
   'Motrin': 'Ibuprofen',
-  'Nurofen': 'Ibuprofen'
+  'Nurofen': 'Ibuprofen',
+  'Prilosec': 'Omeprazole',
+  'Zegerid': 'Omeprazole',
+  'Losec': 'Omeprazole',
+  'Lipitor': 'Atorvastatin'
 };
 
 export default function SyntheticRoutePage() {
@@ -54,6 +62,15 @@ export default function SyntheticRoutePage() {
   const [isSearchCompleted, setIsSearchCompleted] = useState(!!initialQuery);
   const [directVisualization, setDirectVisualization] = useState<boolean>(false);
   const [visualizedDrug, setVisualizedDrug] = useState<string | null>(null);
+
+  // Initialize our synthetic route database updates when the page loads
+  useEffect(() => {
+    // In production, we would uncomment this to schedule regular updates
+    // This is commented out for now to avoid unnecessary background processes during development
+    // scheduleRegularUpdates();
+    
+    console.log('Synthetic route page initialized - open source database is ready');
+  }, []);
 
   // Update suggestions when search query changes
   useEffect(() => {
