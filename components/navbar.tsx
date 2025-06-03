@@ -30,7 +30,6 @@ export function Navbar() {
     { href: "/simulation", label: "Simulation" },
     { href: "/research", label: "Research" },
     { href: "/tools", label: "Tools & APIs" },
-    { href: "/synthetic-route", label: "Synthetic Route" },
     { href: "/contact", label: "Contact" },
     { href: "/chat", label: "Chat" },
     { href: "/demo-explanation", label: "Explainer" },
