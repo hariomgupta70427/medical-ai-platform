@@ -54,12 +54,34 @@ export function SimulationSection() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="protein">Protein Folding</TabsTrigger>
-            <TabsTrigger value="binding">Ligand Binding</TabsTrigger>
-            <TabsTrigger value="pathway">Drug Pathways</TabsTrigger>
-            <TabsTrigger value="search">Search Molecules</TabsTrigger>
-          </TabsList>
+          <div className="relative w-full">
+            <TabsList className="grid grid-cols-2 w-full gap-2 pb-2 mb-6 border-b bg-background sm:flex sm:flex-wrap">
+              <TabsTrigger 
+                value="protein" 
+                className="h-auto py-3 px-3 text-sm text-center"
+              >
+                Protein Folding
+              </TabsTrigger>
+              <TabsTrigger 
+                value="binding" 
+                className="h-auto py-3 px-3 text-sm text-center"
+              >
+                Ligand Binding
+              </TabsTrigger>
+              <TabsTrigger 
+                value="pathway" 
+                className="h-auto py-3 px-3 text-sm text-center"
+              >
+                Drug Pathways
+              </TabsTrigger>
+              <TabsTrigger 
+                value="search" 
+                className="h-auto py-3 px-3 text-sm text-center"
+              >
+                Search Molecules
+              </TabsTrigger>
+            </TabsList>
+          </div>
           
           <TabsContent value="protein">
             <Card>

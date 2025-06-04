@@ -86,8 +86,8 @@ export function Navbar() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "md:hidden overflow-hidden transition-all duration-300 border-b",
-          isMenuOpen ? "max-h-64" : "max-h-0 border-b-0",
+          "md:hidden overflow-hidden transition-all duration-300 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+          isMenuOpen ? "max-h-[500px]" : "max-h-0 border-b-0",
         )}
       >
         <nav className="container py-4 flex flex-col gap-2">
@@ -96,7 +96,7 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                "py-2 px-4 rounded-md text-sm font-medium transition-colors",
+                "py-3 px-4 rounded-md text-sm font-medium transition-colors",
                 pathname === link.href ? "bg-primary/10 text-primary" : "hover:bg-muted text-muted-foreground",
               )}
               onClick={() => setIsMenuOpen(false)}
