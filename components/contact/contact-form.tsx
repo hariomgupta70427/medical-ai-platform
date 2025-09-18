@@ -71,7 +71,7 @@ export function ContactForm() {
 
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" type="email" placeholder="john.doe@example.com" required />
+            <Input id="email" type="email" placeholder="keshav5678kunj@gmail.com " required />
           </div>
 
           <div className="space-y-2">

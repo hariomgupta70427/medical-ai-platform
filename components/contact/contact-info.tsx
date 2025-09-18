@@ -45,7 +45,7 @@ export function ContactInfo() {
               <p className="text-muted-foreground">
               Plot No. 3, Knowledge Park II
                 <br />
-                Greater Noida, Uttar Pradesh 201306
+                Greater Noida, Uttar Pradesh 201306
                 <br />
                 India
               </p>
@@ -75,9 +75,7 @@ export function ContactInfo() {
               <p className="text-muted-foreground">
                 General Inquiries: keshav5678kunj@gmail.com 
                 <br />
-                Support: mamta.talati@lsp.edu.in 
-                <br />
-                Partnerships: guptahariom045@gmail.com
+               Partnerships: guptahariom049@gmail.com
               </p>
             </div>
           </div>
@@ -92,6 +90,49 @@ export function ContactInfo() {
                 Monday - Friday: 9:00 AM - 6:00 PM (PST)
                 <br />
                 Saturday - Sunday: Closed
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-6 border-t">
+          <h3 className="font-medium mb-4">Project Mentors</h3>
+          <div className="space-y-6">
+            <div className="flex items-start">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-4 mt-1">
+                <Mail className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h4 className="font-medium mb-1">Dr. Anjana Sharma</h4>
+                <p className="text-sm text-muted-foreground mb-1">Professor</p>
+                <p className="text-sm text-muted-foreground mb-2">Lloyd Institute of Management and Technology</p>
+                <p className="text-sm text-muted-foreground">Mail: anjana.sharma@lloydpharmacy.edu.in</p>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-4 mt-1">
+                <Mail className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h4 className="font-medium mb-1">Dr. Mamta Talati</h4>
+                <p className="text-sm text-muted-foreground mb-1">Assistant Professor</p>
+                <p className="text-sm text-muted-foreground mb-2">Lloyd school of pharmacy </p>
+                <p className="text-sm text-muted-foreground">Mail: mamta.talati@lsp.edu.in</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-6 border-t">
+          <div className="flex items-start">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-4 mt-1">
+              <Globe className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-medium mb-2">Institutional Affiliation</h3>
+              <p className="text-muted-foreground mb-4">
+                This project is developed and funded by Lloyd Institute of Management and Technology as part of our research initiative in pharmaceutical AI and drug discovery.
               </p>
             </div>
           </div>
@@ -178,23 +219,7 @@ export function ContactInfo() {
             </a>
           </div>
         </div>
-
-        <div className="pt-6 border-t">
-          <div className="flex items-start">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-4 mt-1">
-              <Globe className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-medium mb-2">Looking for a demo?</h3>
-              <p className="text-muted-foreground mb-4">
-                Schedule a personalized demonstration of our platform with one of our product specialists.
-              </p>
-              <Button className="gradient-bg">Schedule a Demo</Button>
-            </div>
-          </div>
-        </div>
       </div>
     </motion.div>
   )
 }
-
