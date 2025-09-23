@@ -109,18 +109,6 @@ export function ContactInfo() {
                 <p className="text-sm text-muted-foreground">Mail: anjana.sharma@lloydpharmacy.edu.in</p>
               </div>
             </div>
-
-            <div className="flex items-start">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mr-4 mt-1">
-                <Mail className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h4 className="font-medium mb-1">Dr. Mamta Talati</h4>
-                <p className="text-sm text-muted-foreground mb-1">Assistant Professor</p>
-                <p className="text-sm text-muted-foreground mb-2">Lloyd school of pharmacy </p>
-                <p className="text-sm text-muted-foreground">Mail: mamta.talati@lsp.edu.in</p>
-              </div>
-            </div>
           </div>
         </div>
 
